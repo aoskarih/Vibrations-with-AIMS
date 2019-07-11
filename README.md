@@ -34,7 +34,7 @@ Benzene will be used as an example throughout this guide. This means that we wil
 
 #### Folders
 
-The script `directory_setup.sh` does this step automatically. You can change the folder names by modifying the script.
+The script `directory_setup.sh` will do this step automatically. You should also check that scripts `run_relax.sh`, `get_vibrations.py` and `get_vibrations_occ.py` really run AIMS in your system.
 
 First a root folder should be made and three sub folder inside it. The subfolders are for relaxation calculations, vibrational calculations and restart files. Restart files are needed when forcing occupations. Each of these three is also divided to subfolders for each state. Now in this example we have six of them. Now the directory should look something like below.
 ```
@@ -56,19 +56,8 @@ Benzene/
 
 #### Files
 
-All of the state specific folders need input files to run AIMS. The specific files depend on the directory. Following is a list of all of the cases.
+To run AIMS we need different script depending on the folder. For the relaxations `run_relax.sh` is used. This is optional and it is used only for conveniency. For states in folder "*vibrations*" `get_vibrations_occ.py` is used if state must force occupation and `get_vibrations.py` if not. In folder "*restart_files*" only `get_vibrations.py` is used.
 
-1. relaxations
-    1. Neutral  
-        The most basic case. Needed are  
-```
-        geometry.in
-        control.in
-        run_relax.sh
-```  
-        in which `run_relax.sh` just runs AIMS in current system.
-    2. ion_0  
-        
 
 
 ### Running relaxation calculations
