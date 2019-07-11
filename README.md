@@ -14,7 +14,7 @@ List of contents
 Making spectrum for molecule
 ----------------------------
 
-This is step-by-step guide to getting vibrational spectrum for your molecule.
+This is a step-by-step guide to getting vibrational spectrum for your molecule.
 
 ### Steps
 
@@ -34,7 +34,7 @@ Benzene will be used as an example throughout this guide. This means that we wil
 
 #### Folders
 
-The script directory_setup.sh does this step automatically. You can change the folder names by modifying the script.
+The script `directory_setup.sh` does this step automatically. You can change the folder names by modifying the script.
 
 First a root folder should be made and three sub folder inside it. The subfolders are for relaxation calculations, vibrational calculations and restart files. Restart files are needed when forcing occupations. Each of these three is also divided to subfolders for each state. Now in this example we have six of them. Now the directory should look something like below.
 ```
@@ -56,7 +56,19 @@ Benzene/
 
 #### Files
 
+All of the state specific folders need input files to run AIMS. The specific files depend on the directory. Following is a list of all of the cases.
 
+1. Relaxations/
+    1. Neutral/
+        The most basic case. Needed are
+        ´´´
+        geometry.in
+        control.in
+        run_relax.sh
+        ´´´
+        in which `run_relax.sh` just runs AIMS in current system.
+    2. ion_0/
+        
 
 
 ### Running relaxation calculations
