@@ -58,16 +58,16 @@ Benzene/
 
 All of the state specific folders need input files to run AIMS. The specific files depend on the directory. Following is a list of all of the cases.
 
-1. Relaxations/
-    1. Neutral/
-        The most basic case. Needed are
-        ´´´
+1. relaxations
+    1. Neutral  
+        The most basic case. Needed are  
+```
         geometry.in
         control.in
         run_relax.sh
-        ´´´
+```  
         in which `run_relax.sh` just runs AIMS in current system.
-    2. ion_0/
+    2. ion_0  
         
 
 
