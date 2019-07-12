@@ -56,7 +56,7 @@ Benzene/
 
 #### Files
 
-To run AIMS we need different script depending on the folder. For the relaxations `run_relax.sh` is used. This is optional and it is used only for conveniency. For states in folder "*vibrations*" `get_vibrations_occ.py` is used if state must force occupation and `get_vibrations.py` if not. In folder "*restart_files*" only `get_vibrations.py` is used.
+To run AIMS we need different script depending on the folder. For the "*relaxations*" folder `run_relax.sh` is used. This is optional and it is used only for conveniency. For states in folder "*vibrations*" `get_vibrations_occ.py` is used if state must force occupation and `get_vibrations.py` if not. In folder "*restart_files*" only `get_vibrations.py` is used.
 
 
 
