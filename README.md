@@ -11,8 +11,8 @@ This is a step-by-step guide to getting vibrational spectrum for your molecule.
 
 1. [Setting up directory](#setting-up-directory)
 2. [Running relaxation calculations](#running-relaxation-calculations)
-3. [Running ground state vibrational calculations](#running-ground-state-vibrational-calculations)
-4. [Running exited state vibrational calculations](#running-exited-state-vibrational-calculations)
+3. [Generating restart files](#generating-restart-files)
+4. [Running vibrational calculations](#running-vibrational-calculations)
 5. [Post-processing data from calculations](#post-processing-data-from-calculations)
 6. [Plotting results](#plotting-results)
 7. [Summary](#summary)
@@ -53,40 +53,32 @@ To run AIMS we need different script depending on the folder. For the "*relaxati
 
 To run any calculation we need `control.in` and `geometry.in` files. Sample files for benzene are provided. 
 
-When making control.in file it is important to include the line below
-```
-restart                 restart
-```
-because the restart file is needed later when forcing the occupations. For more details about forcing the occupations see tag "*force_occupation_projecto*" in AIMS Manual. If you wan't to change the name of the restart file, then edited line (350) in `get_vibrations_occ.py` should also be changed. It is also important to remember that you can only change charge and add the occupation forcing in `control.in` file after running the first relaxation. 
+When making control.in file it is important to include the line `restart        restart` because the restart file is needed later when forcing the occupations. For more details about forcing the occupations see tag "*force_occupation_projecto*" in AIMS Manual. Name of the restart file should be "restart" and if you wan't to change it, then the edited line (350) in `get_vibrations_occ.py` should also be changed. It is also important to remember that you can only change charge and add the occupation forcing in `control.in` file after running the first relaxation. 
 
 When the `control.in` and `geometry.in` files are ready for the neutral state (or any other initial state) with no occupations, you should copy files to the appropriate folder, in our example case `/Benzene/relaxations/neutral_0/` and then run AIMS. This should be done for all the states that don't require forcing occupations. With benzenes case `ion_0` is the only other.
 
-After AIMS has done its work there should be `restart` file in the folder. Copy that file and the `geometry.in` file to folders of all the states that force occupations. In our example it can be done by commands
+After AIMS has done its work there should be `restart` file in the folder. Copy that file and the `geometry.in` file to folders of all the states that force occupations and copy `control.in` file to the same folders. Then add the "*force_occupation_projector*" lines for different states. Also remember to change charge for ions. With our example following lines are added
 ```
-tee ion_1/restart ion_2/restart ion_3/restart ion_4/restart < neutral_0/restart >/dev/null
-tee ion_1/geometry.in ion_2/geometry.in ion_3/geometry.in ion_4/geometry.in < neutral_0/geometry.in >/dev/null
+ion_1/control.in: force_occupation_projector      20 2 0.0 20 21
+ion_2/control.in: force_occupation_projector      19 2 0.0 18 19
+ion_3/control.in: force_occupation_projector      18 2 0.0 18 19
+ion_4/control.in: force_occupation_projector      17 2 0.0 16 18
 ```
-Then copy `control.in` files to the same folders and add the "*force_occupation_projector*" lines for different states. Also remember to change charge for ions. With our example following lines are added
-```
-ion_1/: force_occupation_projector      20 2 0.0 20 21
-ion_2/: force_occupation_projector      19 2 0.0 18 19
-ion_3/: force_occupation_projector      18 2 0.0 18 19
-ion_4/: force_occupation_projector      17 2 0.0 16 18
-```
-Then run AIMS for all the states. After AIMS is finished there should be `geometry.in.next_step` file in every folder. Those are needed in the next step.
+Then run AIMS for all the states. After AIMS has finished there should be `geometry.in.next_step` file in every folder. Those are needed in the next step.
 
 There might be problems when relaxing the geometries. Try running `grep "Maximum force" */aims.out` in "*relaxations*" folder to make sure all the geometries are converged.
 
 If you have to force occupations in degenerate electron levels, be aware that AIMS usually chooses one of the states and you can't force hole to the other without running a risk that calculation doesn't converge. This means that for example in benzenes case *ion_2* and *ion_3* states will be identical as well as *ion_0* and *ion_1*.
 
 
-### Running ground state vibrational calculations
+### Generating restart files
 
 
-delta in 2 places
+
+delta in 3 places
 
 
-### Running exited state vibrational calculations
+### Running vibrational calculations
 
 
 ### Post-processing data from calculations
