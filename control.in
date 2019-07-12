@@ -20,8 +20,10 @@
   #
 
   restart                       restart
-#  force_occupation_projector    18 2 0.0 18 19
-#  force_occupation_projector    21 2 1.0 20 21
+#  force_occupation_projector      20 2 0.0 20 21 # ion 1
+#  force_occupation_projector      19 2 0.0 18 19 # ion 2
+#  force_occupation_projector      18 2 0.0 18 19 # ion 3
+#  force_occupation_projector      17 2 0.0 16 18 # ion 4
 
   #  Relaxation
   #

@@ -70,15 +70,18 @@ There might be problems when relaxing the geometries. Try running `grep "Maximum
 
 If you have to force occupations in degenerate electron levels, be aware that AIMS usually chooses one of the states and you can't force hole to the other without running a risk that calculation doesn't converge. This means that for example in benzenes case *ion_2* and *ion_3* states will be identical as well as *ion_0* and *ion_1*.
 
-
 ### Generating restart files
 
+Because calculations where occupations are forced need restart files and for restart file to work `geometry.in` files must be identical, we need 6N restart files for every state (N is number of atoms). To make these files, first copy `geometry.in.next_step` files from "*relaxations*" to matching folders in "*restart_files*" and rename them `geometry.in`. Then copy the `control.in` file that was used for the initial state to all of the folders in "*restart_files*". 
 
+Now restart files are needed only for the states that force occupations, so for our example we don't need to touch *neutral_0* or *ion_0* states at all. But the other states are ready and next `run_vib.sh` should be ran. It will make new folder "*delta_0.0025*" and vibrational calculations will be done there. Because `control.in` and `geometry.in` files don't match in these calculations, results will be wrong. But restart files will be generated for all the steps of the calculation and these will be used in the next step.
 
-delta in 3 places
+After the script has finished there should be list of folders under "*delta_0.0025*" with names something like"*run.i_atom_1.i_coord_1.displ_0.0025*" and inside of everyone of these should be restart file.
 
+The 0.0025 in "*delta_0.0025*" is the displacement used when doing the vibrational calculations. If you want to change the value of delta, it has to be changed in three places: `run_vib.sh`, `get_vibrations_occ.py` line 350 and FCI.py under comment `# data folders`. Restart files and final calculations must be done with the same delta.
 
 ### Running vibrational calculations
+
 
 
 ### Post-processing data from calculations
