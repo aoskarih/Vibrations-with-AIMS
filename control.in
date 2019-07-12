@@ -26,7 +26,7 @@
   #  Relaxation
   #
   
-  relax_geometry                bfgs    1.e-3
+  relax_geometry                bfgs    1.e-4
 
 
 
