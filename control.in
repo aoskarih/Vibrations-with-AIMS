@@ -19,7 +19,7 @@
   #  Occupation settings
   #
 
-  restart_write_only                       restart
+  restart                       restart
 #  force_occupation_projector      21 1 1.0 20 21 # ion 0
 #  force_occupation_projector      20 1 1.0 20 21 # ion 1
 #  force_occupation_projector      19 1 1.0 18 19 # ion 2
