@@ -2,10 +2,9 @@
 # Vibrational spectrum with FHI-AIMS
 
 
+## Guide to 
 
-## Making spectrum for molecule
-
-This is a step-by-step guide to getting vibrational spectrum for your molecule.
+This is a step-by-step guide to getting vibrational spectrum for your molecule with FHI-AIMS.
 
 ### Steps
 
@@ -13,7 +12,7 @@ This is a step-by-step guide to getting vibrational spectrum for your molecule.
 2. [Running relaxation calculations](#running-relaxation-calculations)
 3. [Generating restart files](#generating-restart-files)
 4. [Running vibrational calculations](#running-vibrational-calculations)
-5. [Post-processing data from calculations](#post-processing-data-from-calculations)
+5. [Calculating transition intensities](#calculating-transition-intensities)
 6. [Plotting results](#plotting-results)
 7. [Summary](#summary)
 
@@ -23,9 +22,9 @@ Some of the scripts require specific folder structure and folder names, so if yo
 
 Benzene will be used as an example throughout this guide and all the default setting are for benzene. This means that we will have neutral ground state from which all the transitions are going to start and we will take five ion states where transitions are going to end. Ion states are going to differ in their electronic occupations.
 
-#### Folders
-
 The script `directory_setup.sh` will make the folders and copy files automatically, but first you should check that scripts `run_relax.sh` and `run_vib.sh` really run AIMS in your system and that list of states and folder names in `directory_setup.sh` match your needs.
+
+#### Folders
 
 First a root folder should be made and three sub folder inside it. The subfolders are for relaxation calculations, vibrational calculations and restart files. Restart files are needed when forcing occupations. Each of these three is also divided to subfolders for each state. Now in this example we have six of them. Now the directory should look something like below.
 ```
@@ -72,20 +71,27 @@ If you have to force occupations in degenerate electron levels, be aware that AI
 
 ### Generating restart files
 
-Because calculations where occupations are forced need restart files and for restart file to work `geometry.in` files must be identical, we need 6N restart files for every state (N is number of atoms). To make these files, first copy `geometry.in.next_step` files from "*relaxations*" to matching folders in "*restart_files*" and rename them `geometry.in`. Then copy the `control.in` file that was used for the initial state to all of the folders in "*restart_files*". 
+Because calculations, where occupations are forced, need restart files and for restart file to work `geometry.in` files must be identical, we need 6N restart files per state (N is number of atoms). To make these files, first copy `geometry.in.next_step` files from "*relaxations*" to matching folders in "*restart_files*" and rename them `geometry.in`. Then copy the `control.in` file that was used for the initial state to all of the folders in "*restart_files*". 
 
-Now restart files are needed only for the states that force occupations, so for our example we don't need to touch *neutral_0* or *ion_0* states at all. But the other states are ready and next `run_vib.sh` should be ran. It will make new folder "*delta_0.0025*" and vibrational calculations will be done there. Because `control.in` and `geometry.in` files don't match in these calculations, results will be wrong. But restart files will be generated for all the steps of the calculation and these will be used in the next step.
+Restart files are needed only for the states that force occupations, so for our example we don't need to touch *neutral_0* or *ion_0* states at all. But the other states are ready and next `run_vib.sh` should be ran in those folders. It will make new folder "*delta_0.0025*" and vibrational calculations will be done there. Because `control.in` and `geometry.in` files don't match in these calculations, results will be wrong. But restart files will be generated for all the steps of the calculation and these will be used in the next step.
 
-After the script has finished there should be list of folders under "*delta_0.0025*" with names something like"*run.i_atom_1.i_coord_1.displ_0.0025*" and inside of everyone of these should be restart file.
+After the script has finished there should be list of folders under "*delta_0.0025*" with names something like "*run.i_atom_1.i_coord_1.displ_0.0025*" and inside everyone of these should be a restart file.
 
-The 0.0025 in "*delta_0.0025*" is the displacement used when doing the vibrational calculations. If you want to change the value of delta, it has to be changed in three places: `run_vib.sh`, `get_vibrations_occ.py` line 350 and FCI.py under comment `# data folders`. Restart files and final calculations must be done with the same delta.
+The 0.0025 in "*delta_0.0025*" is the displacement used when doing the vibrational calculations. If you want to change the value of delta, it has to be changed in four places: `run_vib.sh`, `directory_setup.sh`, `get_vibrations_occ.py` line 350 and `FCI.py` under comment `# data folders`. Restart files and final calculations must be done with the same delta.
 
 ### Running vibrational calculations
 
+Now that we have all the restart files and proper geometries we can begin the actual vibrational calculations. First we need to copy relaxed geometries and `control.in` files from "*relaxations*" to "*vibrations*". Again remember to rename `geometry.in.next_step` to just `geometry.in`. When these files are in place, everything should be ready and you only need to run the script `run_vib.sh` in every directory under "*vibrations*". 
 
+After aims has finished there will be output files in all of the `vibrations/state/delta_0.0025/` directories. What we are interested in are the `run.xyz` and `vib_post_0.0025.out` files. You should check that values in `run.xyz` are in float format. Some times they appear as complex numbers, example: `0.12345+0.00000j`. That can be usually fixed by running the script again: `python get_vibrations.py run 1 >& vib_post_0.0025.out`. 
 
-### Post-processing data from calculations
+In addition to normal modes, there's values for force constant, reduced mass and frequency in `run.xyz`. Sometimes the value for force constant or reduced mass is replaced by \*\*\*\*\*. Post-processing script can handle the situations when only one of the values is missing, but when both of them are missing it causes problems.
 
+### Calculating transition intensities
+
+When the output files of the vibrational calculations are ready, the script `FCI.py` can be ran and it will make a `intensity.dat` file, which will have the spectrum we are after.
+
+When running the script it is recommended to direct the output to a file, for example `python FCI.py >& fci.out`. 
 
 ### Plotting results
 
