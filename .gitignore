@@ -1,5 +1,5 @@
 # Gitignore
 
-.README.md.swp
+.*.swp
 /Benzene/*
 
