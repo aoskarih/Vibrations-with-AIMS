@@ -4,8 +4,8 @@
   xc                            pbe
   charge                        0.0
   relativistic                  none
-  default_initial_moment        0.0
-  spin                          collinear
+#  default_initial_moment        0.0
+  spin                          none
   vdw_correction_hirshfeld
 
   #  SCF convergence settings
@@ -19,11 +19,12 @@
   #  Occupation settings
   #
 
-  restart                       restart
-#  force_occupation_projector      20 2 0.0 20 21 # ion 1
-#  force_occupation_projector      19 2 0.0 18 19 # ion 2
-#  force_occupation_projector      18 2 0.0 18 19 # ion 3
-#  force_occupation_projector      17 2 0.0 16 18 # ion 4
+  restart_write_only                       restart
+#  force_occupation_projector      21 1 1.0 20 21 # ion 0
+#  force_occupation_projector      20 1 1.0 20 21 # ion 1
+#  force_occupation_projector      19 1 1.0 18 19 # ion 2
+#  force_occupation_projector      18 1 1.0 18 19 # ion 3
+#  force_occupation_projector      17 1 1.0 17 17 # ion 4
 
   #  Relaxation
   #

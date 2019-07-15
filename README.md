@@ -22,7 +22,7 @@ Some of the scripts require specific folder structure and folder names, so if yo
 
 Benzene will be used as an example throughout this guide and all the default setting are for benzene. This means that we will have neutral ground state from which all the transitions are going to start and we will take five ion states where transitions are going to end. Ion states are going to differ in their electronic occupations.
 
-The script `directory_setup.sh` will make the folders and copy files automatically, but first you should check that scripts `run_relax.sh` and `run_vib.sh` really run AIMS in your system and that list of states and folder names in `directory_setup.sh` match your needs. 
+The script `directory_setup.sh` will make the folders and copy files automatically, but first you should check that scripts `run_relax.sh` and `run_vib.sh` really run AIMS in your system and that list of states and folder names in `directory_setup.sh` match your needs. Now is also the best time to choose the delta that is used as a displacement in the vibrational calculations. The default is 0.0025 Å and it can be changed with script, for example to set delta = 0.001 `./set_delta.sh 0.001`.
 
 #### Folders
 
@@ -77,7 +77,7 @@ Restart files are needed only for the states that force occupations, so for our 
 
 After the script has finished there should be list of folders under "*delta_0.0025*" with names something like "*run.i_atom_1.i_coord_1.displ_0.0025*" and inside everyone of these should be a restart file.
 
-The 0.0025 in "*delta_0.0025*" is the displacement used when doing the vibrational calculations. If you want to change the value of delta, it has to be changed in three places: `run_vib.sh`, `directory_setup.sh` and `FCI.py`. Script `set_delta.sh` does this automatically and new delta is the first parameter, for example `./set_delta.sh 0.001`. Remember that restart files and final calculations must be done with the same delta.
+The 0.0025 in "*delta_0.0025*" is the displacement used when doing the vibrational calculations. If you want to change the value of delta after generating the restart files, then `get_vibrations_occ.py` and `run_vib.sh` scripts must be edited in every subfolder as well as `FCI.py` in root folder. Remember that restart files and final calculations must be done with the same delta.
 
 ### Running vibrational calculations
 
@@ -89,7 +89,7 @@ In addition to normal modes, there's values for force constants, reduced masses 
 
 ### Calculating transition intensities
 
-When the output files of the vibrational calculations are ready, the script `FCI.py` should be ran in root directory which for our example is "*Benzene/*". The script will make a `intensity.dat` file which will have the spectrum we are after. You can change the filename at the bottom of `FCI.py`. When running the script it is recommended to direct the output to a file, for example `python FCI.py >& fci.out`. 
+When the output files of the vibrational calculations are ready, the script `FCI.py` should be ran in root directory which for our example is "*Benzene*". The script will make a `intensity.dat` file which will have the spectrum we are after. You can change the filename at the bottom of `FCI.py`. When running the script it is recommended to direct the output to a file, for example `python FCI.py >& fci.out`. 
 
 
 

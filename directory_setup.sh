@@ -4,8 +4,8 @@
 root=Benzene
 sub=('relaxations' 'vibrations' 'restart_files')
 
-# State folders are named so that if the name ends in "_0" the state doesn't need to force occupations. 
-states=('neutral_0' 'ion_0' 'ion_1' 'ion_2' 'ion_3' 'ion_4')
+# State folders are named so that if the name contains "_oc" the state needs to force occupations. 
+states=('neutral_0' 'ion_0_oc' 'ion_1_oc' 'ion_2_oc' 'ion_3_oc' 'ion_4_oc')
 
 # Script names
 run_vib=run_vib.sh
@@ -39,15 +39,15 @@ tmp=${sub[1]}
 mkdir $tmp
 for j in "${states[@]}"; do
     mkdir $tmp/$j
-    re='(_0)'
+    re='(_oc)'
     if [[ $j =~ $re ]]; then
-        cp $get_vib $tmp/$j/
-        cp $run_vib $tmp/$j/
-    else
         sed "s+get_vibrations.py+get_vibrations_occ.py+" $run_vib > tmp_file
         mv tmp_file $tmp/$j/$run_vib
         sed "s+path_to_restart_files+$cur/$root/${sub[2]}/$j/$vib_run_dir/+" $get_occ > tmp_file
         mv tmp_file $tmp/$j/$get_occ
+    else
+        cp $get_vib $tmp/$j/
+        cp $run_vib $tmp/$j/
     fi
 done
 
