@@ -7,12 +7,13 @@ sub=('relaxations' 'vibrations' 'restart_files')
 # State folders are named so that if the name ends in "_0" the state doesn't need to force occupations. 
 states=('neutral_0' 'ion_0' 'ion_1' 'ion_2' 'ion_3' 'ion_4')
 
-
+# Script names
 run_vib=run_vib.sh
 run_rel=run_relax.sh
 get_vib=get_vibrations.py
 get_occ=get_vibrations_occ.py
 
+# Chosen delta
 vib_run_dir=delta_0.0025
 
 cur=$PWD
