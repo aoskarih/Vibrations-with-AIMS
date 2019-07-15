@@ -11,8 +11,8 @@
 #
 #
 #
-bin=/homeappl/home/hyvonen1/fhi-aims.160328_3/bin
+aims_dir=/homeappl/home/hyvonen1/fhi-aims.160328_3/bin/aims.160328_3.mpi.x
 #
 #
 #
-srun $bin/aims.160328_3.mpi.x >& aims.out 
+srun $aims_dir >& aims.out 

@@ -168,7 +168,7 @@ def main():
                       help="Set up/ Calculate vibrations & quit")
   parser.add_option("-s", "--suffix", action="store",
                     help="Call suffix for binary e.g. 'mpirun -n 4 '",
-                    default='srun')
+                    default='')
   parser.add_option("-r", "--run", action="store",
                     help="path to FHI-aims binary",default='')
   parser.add_option("-x", "--relax", action="store_true",

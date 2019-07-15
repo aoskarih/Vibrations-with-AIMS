@@ -77,7 +77,7 @@ Restart files are needed only for the states that force occupations, so for our 
 
 After the script has finished there should be list of folders under "*delta_0.0025*" with names something like "*run.i_atom_1.i_coord_1.displ_0.0025*" and inside everyone of these should be a restart file.
 
-The 0.0025 in "*delta_0.0025*" is the displacement used when doing the vibrational calculations. If you want to change the value of delta, it has to be changed in four places: `run_vib.sh`, `directory_setup.sh`, `get_vibrations_occ.py` line 350 and `FCI.py` under comment `# data folders`. Restart files and final calculations must be done with the same delta.
+The 0.0025 in "*delta_0.0025*" is the displacement used when doing the vibrational calculations. If you want to change the value of delta, it has to be changed in three places: `run_vib.sh`, `directory_setup.sh` and `FCI.py`. Script `set_delta.sh` does this automatically and new delta is the first parameter, for example `./set_delta.sh 0.001`. Remember that restart files and final calculations must be done with the same delta.
 
 ### Running vibrational calculations
 
@@ -89,9 +89,7 @@ In addition to normal modes, there's values for force constant, reduced mass and
 
 ### Calculating transition intensities
 
-When the output files of the vibrational calculations are ready, the script `FCI.py` can be ran and it will make a `intensity.dat` file, which will have the spectrum we are after.
-
-When running the script it is recommended to direct the output to a file, for example `python FCI.py >& fci.out`. 
+When the output files of the vibrational calculations are ready, the script `FCI.py` should be ran in root directory which for our example is "*Benzene/*". The script will make a `intensity.dat` file which will have the spectrum we are after. You can change the filename at the bottom of `FCI.py`. When running the script it is recommended to direct the output to a file, for example `python FCI.py >& fci.out`. 
 
 ### Plotting results
 

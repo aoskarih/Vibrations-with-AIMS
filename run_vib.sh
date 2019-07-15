@@ -29,5 +29,7 @@ cp geometry.in delta_$delta/
 cp get_vibrations.py delta_$delta/
 cd delta_$delta
 
-python get_vibrations.py -r $aims_dir run 0 >& vib_$delta.out
+# -s suffix when running aims
+# -r path to aims binary
+python get_vibrations.py -s srun -r $aims_dir run 0 >& vib_$delta.out
 python get_vibrations.py run 1 >& vib_post_$delta.out
