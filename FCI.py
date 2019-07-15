@@ -1,5 +1,5 @@
 # Arttu Hyvonen
-# 6/2019 - 7/2019
+# 7/2019
 
 import scipy.special as special
 from scipy.misc import factorial
@@ -19,12 +19,12 @@ delta = 0.0025
 
 # data folders
 sub_fol = "delta_"+str(selta)+"/"               # sub folder where output files are
-folders = ["neutral_ground_state/",     # list of folders for different electronic states
-            "ion_ground_state/",        # Transitions are calculated from the 1. state to the others
-            "ion_exited_state_1/",  
-            "ion_exited_state_2/", 
-            "ion_exited_state_3/", 
-            "ion_exited_state_4/"]
+folders = ["neutral_0/",     # list of folders for different electronic states
+            "ion_0/",        # Transitions are calculated from the 1. state to the others
+            "ion_1/",  
+            "ion_2/", 
+            "ion_3/", 
+            "ion_4/"]
 
 folders = [f+sub_fol for f in folders]
 
@@ -237,8 +237,6 @@ def get_vib_energy(freq, m, E0):
 # returns list of different integer combinations of length l 
 # for which the sum of integers in the combination is less than m.
 # Note that the length of the list grows rapidly: length = Binomial(l+m, l)
-# (Side note: This function doubles as an inefficient way to calculate 
-# binomials because growth rate above is exact.)
 # example:
 # m = 2, l = 4
 # returns: [[0, 0, 0, 0], [1, 0, 0, 0]. [2, 0, 0, 0], [1, 1, 0, 0], ..., [0, 0, 0, 2]]
@@ -268,7 +266,7 @@ def write_intensities(d, freq, mu, E0, T, S_limit, c, filename):
     modes = []          # relevant modes
     sl = []
     
-    # 2 choices for limiting number of calculated modes
+    # Two choices for limiting number of calculated modes
     # 1. Take all the modes for which S > S_limit
     # 2. Take 10 modes with the largest S
     # Option 1 ensures that all relevant modes are calculated, 
@@ -374,25 +372,19 @@ def main():
    
 def only_relaxation(filename):
     
-    folders = ["ion_ground_state/delta_0.0025/"]
-    
-    print("Frequencies:")
-    freq = get_frequencies(folders)
-    print("Done.")
+    rt = "vibrations/"
+    folders = ["neutral_0/", "ion_0/"]#, "ion_1/", "ion_2/", "ion_3/", "ion_4/"]
+    print("Reading vibrational output")
+    freq = get_frequencies(folders)                     
+    mu = get_reduced_masses(folders)                    
+    norm_modes = get_normal_modes(folders)              
+    T = get_transformation_matrix(norm_modes[0])        
+    print("Done")
 
-    print("\n Reduced masses")
-    mu = get_reduced_masses(folders)
-    print("Done.")
 
-    print("\n Normal modes")
-    norm_modes = get_normal_modes(folders)
-    print("Done.")
-
-    T = get_transformation_matrix(norm_modes[0])
-    
     pos = []
-    rt = "relax_b3lyp/"
-    folders = ["ng/", "ig/"]#, "ie1/", "ie2/", "ie3/", "ie4/"]
+    rt = "relaxations/"
+    folders = ["neutral_0/", "ion_0/"]#, "ion_1/", "ion_2/", "ion_3/", "ion_4/"]
     for fol in folders:
         f = open(rt+fol+"geometry.in.next_step")
         d = []

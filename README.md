@@ -2,7 +2,7 @@
 # Vibrational spectrum with FHI-AIMS
 
 
-## Guide to 
+## Making vibrational spectrum
 
 This is a step-by-step guide to getting vibrational spectrum for your molecule with FHI-AIMS.
 
@@ -22,7 +22,7 @@ Some of the scripts require specific folder structure and folder names, so if yo
 
 Benzene will be used as an example throughout this guide and all the default setting are for benzene. This means that we will have neutral ground state from which all the transitions are going to start and we will take five ion states where transitions are going to end. Ion states are going to differ in their electronic occupations.
 
-The script `directory_setup.sh` will make the folders and copy files automatically, but first you should check that scripts `run_relax.sh` and `run_vib.sh` really run AIMS in your system and that list of states and folder names in `directory_setup.sh` match your needs.
+The script `directory_setup.sh` will make the folders and copy files automatically, but first you should check that scripts `run_relax.sh` and `run_vib.sh` really run AIMS in your system and that list of states and folder names in `directory_setup.sh` match your needs. 
 
 #### Folders
 
@@ -85,15 +85,18 @@ Now that we have all the restart files and proper geometries we can begin the ac
 
 After aims has finished there will be output files in all of the `vibrations/state/delta_0.0025/` directories. What we are interested in are the `run.xyz` and `vib_post_0.0025.out` files. You should check that values in `run.xyz` are in float format. Some times they appear as complex numbers, example: `0.12345+0.00000j`. That can be usually fixed by running the script again: `python get_vibrations.py run 1 >& vib_post_0.0025.out`. 
 
-In addition to normal modes, there's values for force constant, reduced mass and frequency in `run.xyz`. Sometimes the value for force constant or reduced mass is replaced by \*\*\*\*\*. Post-processing script can handle the situations when only one of the values is missing, but when both of them are missing it causes problems.
+In addition to normal modes, there's values for force constants, reduced masses and frequencies in `run.xyz`. Sometimes the value for force constant or reduced mass is replaced by \*\*\*\*\*. Post-processing script can handle the situations when only one of the values is missing, but when both of them are missing it causes problems.
 
 ### Calculating transition intensities
 
 When the output files of the vibrational calculations are ready, the script `FCI.py` should be ran in root directory which for our example is "*Benzene/*". The script will make a `intensity.dat` file which will have the spectrum we are after. You can change the filename at the bottom of `FCI.py`. When running the script it is recommended to direct the output to a file, for example `python FCI.py >& fci.out`. 
 
+
+
 ### Plotting results
 
 
 ### Summary
+
 
 
