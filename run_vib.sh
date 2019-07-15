@@ -19,6 +19,8 @@ export OMP_STACKSIZE="1G"
 #
 
 aims_dir=/homeappl/home/hyvonen1/fhi-aims.160328_3/bin/aims.160328_3.mpi.x
+module load python-env
+
 
 delta=0.0025
 mkdir delta_$delta
@@ -26,8 +28,6 @@ cp control.in delta_$delta/
 cp geometry.in delta_$delta/
 cp get_vibrations.py delta_$delta/
 cd delta_$delta
-
-module load python-env
 
 python get_vibrations.py -r $aims_dir run 0 >& vib_$delta.out
 python get_vibrations.py run 1 >& vib_post_$delta.out
