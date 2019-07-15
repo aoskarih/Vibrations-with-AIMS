@@ -411,6 +411,7 @@ def only_relaxation(filename):
         print("")
 
     # total energies
+    # TODO: Total energies from another file
     E0 = []
     for fol in folders:
         f = open(rt+fol+"aims.out")
