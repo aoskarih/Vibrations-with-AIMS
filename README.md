@@ -58,10 +58,11 @@ When the `control.in` and `geometry.in` files are ready for the neutral state (o
 
 After AIMS has done its work there should be `restart` file in the folder. Copy that file and the `geometry.in` file to folders of all the states that force occupations and copy `control.in` file to the same folders. Then add the "*force_occupation_projector*" lines for different states. Also remember to change charge for ions. With our example following lines are added
 ```
-ion_1/control.in: force_occupation_projector      20 2 0.0 20 21
-ion_2/control.in: force_occupation_projector      19 2 0.0 18 19
-ion_3/control.in: force_occupation_projector      18 2 0.0 18 19
-ion_4/control.in: force_occupation_projector      17 2 0.0 16 18
+ion_0/control.in: force_occupation_projector      21 1 1.0 20 21
+ion_1/control.in: force_occupation_projector      20 1 1.0 20 21
+ion_2/control.in: force_occupation_projector      19 1 1.0 18 19
+ion_3/control.in: force_occupation_projector      18 1 1.0 18 19
+ion_4/control.in: force_occupation_projector      17 1 1.0 17 17
 ```
 Then run AIMS for all the states. After AIMS has finished there should be `geometry.in.next_step` file in every folder. Those are needed in the next step.
 
@@ -81,7 +82,7 @@ The 0.0025 in "*delta_0.0025*" is the displacement used when doing the vibration
 
 ### Running vibrational calculations
 
-Now that we have all the restart files and proper geometries we can begin the actual vibrational calculations. First we need to copy relaxed geometries and `control.in` files from "*relaxations*" to "*vibrations*". Again remember to rename `geometry.in.next_step` to just `geometry.in`. When these files are in place, everything should be ready and you only need to run the script `run_vib.sh` in every directory under "*vibrations*". 
+Now that we have all the restart files and proper geometries we can begin the actual vibrational calculations. First we need to copy relaxed geometries and `control.in` files from "*relaxations*" to "*vibrations*". This time we want the `control.in` files specific to state and again remember to rename `geometry.in.next_step` to just `geometry.in`. When these files are in place, everything should be ready and you only need to run the script `run_vib.sh` in every directory under "*vibrations*". 
 
 After aims has finished there will be output files in all of the `vibrations/state/delta_0.0025/` directories. What we are interested in are the `run.xyz` and `vib_post_0.0025.out` files. You should check that values in `run.xyz` are in float format. Some times they appear as complex numbers, example: `0.12345+0.00000j`. That can be usually fixed by running the script again: `python get_vibrations.py run 1 >& vib_post_0.0025.out`. 
 

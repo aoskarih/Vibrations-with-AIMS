@@ -18,7 +18,7 @@ kb = 8.6173e-5		# ev/K
 delta = 0.0025
 
 # data folders
-sub_fol = "delta_"+str(selta)+"/"               # sub folder where output files are
+sub_fol = "delta_"+str(delta)+"/"               # sub folder where output files are
 folders = ["neutral_0/",     # list of folders for different electronic states
             "ion_0/",        # Transitions are calculated from the 1. state to the others
             "ion_1/",  
@@ -195,7 +195,7 @@ def intensity(d, freq, mu, m, n, T, S_limit, relevant=[]):
         # Do the calculation for all relevant modes
         for i in relevant:
             # Get S
-	    S = get_huang_rhys(d[i], mu[0][i], freq[0][i])
+	    S = get_huang_rhys(d[i], mu[i], freq[i])
 	    
             # Calculate Franck-Condon integral
             FCI = FCI2(S, m[i], n[i])
@@ -205,7 +205,7 @@ def intensity(d, freq, mu, m, n, T, S_limit, relevant=[]):
 	    
             # Temperature term
             if T != 0:
-		I *= np.exp(-hbar*m[i]*freq[0][i]/(kb*T))
+		I *= np.exp(-hbar*m[i]*freq[i]/(kb*T))
 
         if I > 1e-3:
             print("I: " + str(I))
@@ -213,14 +213,14 @@ def intensity(d, freq, mu, m, n, T, S_limit, relevant=[]):
     
     # If no relevant list get S for all modes and continue calculation with relevant modes
     for i in range(len(d)):
-	S = get_huang_rhys(d[i], mu[0][i], freq[0][i])
+	S = get_huang_rhys(d[i], mu[i], freq[i])
         if S < S_limit: 
             #print("%2.2i  %10.6f  %10s %5.1i %5.1i  ignored" % (i, S, "", m[i], n[i]))
             continue
         FCI = FCI2(S, m[i], n[i])
         I *= FCI
 	if T != 0:
-	    I *= np.exp(-hbar*m[i]*freq[0][i]/(kb*T))
+	    I *= np.exp(-hbar*m[i]*freq[i]/(kb*T))
         #print("%2.2i  %10.6f  %10.6f %5.1i %5.1i" % (i, S, FCI, m[i], n[i]))
     print("I: " + str(I) + "\n")
     return I
@@ -273,13 +273,13 @@ def write_intensities(d, freq, mu, E0, T, S_limit, c, filename):
     # but option 2 is more consistent in calculation time. 
     # There might be large variance in number of relevant modes between different electronic states
     if 1: # 1.
-        for i, f in enumerate(freq[0]):
-            S = get_huang_rhys(d[i], mu[0][i], f)
+        for i, f in enumerate(freq):
+            S = get_huang_rhys(d[i], mu[i], f)
             if S > S_limit:
                 sl.append((S, i))
     else: # 2.
-        for i, f in enumerate(freq[0]):
-            S = get_huang_rhys(d[i], mu[0][i], f)
+        for i, f in enumerate(freq):
+            S = get_huang_rhys(d[i], mu[i], f)
             sl.append((S, i))
         def comp(x): return x[0]
         sl = nlargest(10, sl, key=comp)
@@ -299,7 +299,10 @@ def write_intensities(d, freq, mu, E0, T, S_limit, c, filename):
     # the script execution time. Anything above m=3 and n=4 not recommended since python isn't that fast.
     itr_m = combinations(2, len(modes)) 
     itr_n = combinations(3, len(modes))
-    
+   
+    for mode in modes:
+        if freq[mode] < 2:
+            print("Negative mode as relevant")
     
     # Assuming that the calculation is from neutral ground state 
     # to ion and it's exited states (up in energy), then use the upper block.
@@ -314,7 +317,7 @@ def write_intensities(d, freq, mu, E0, T, S_limit, c, filename):
         for i, mode in enumerate(modes):
             m[mode] = comb_m[i]
         # Get the energy of initial state
-        e_m = get_vib_energy(freq[0], m, E0[0])
+        e_m = get_vib_energy(freq, m, E0[0])
         for comb_n in itr_n:
             for i, mode in enumerate(modes):
                 n[mode] = comb_n[i]
@@ -322,7 +325,7 @@ def write_intensities(d, freq, mu, E0, T, S_limit, c, filename):
             # Filter out irrelevant transitions
             if I < 1e-3: continue
             # Get the energy of final state
-            e_n = get_vib_energy(freq[0], n, E0[1])
+            e_n = get_vib_energy(freq, n, E0[1])
             f.write("%10.6f  %10.6f  %s\n" % (I, e_n-e_m, c))
     #############################
     """
@@ -346,30 +349,84 @@ def write_intensities(d, freq, mu, E0, T, S_limit, c, filename):
     f.close()
 
 
-def main():
-    # getting data in desired form
-    positions = get_positions(folders)                         # [np(x1, x2, ...), ...]
-    normal_modes = get_normal_modes(folders)                   # [[np(x1, x2, ...), ...], ...]
-    frequencies = get_frequencies(folders)                     # [np(f, f, ...), ...]
-    masses = get_masses(folders)                               # 
-    red_masses = get_reduced_masses(folders)                   # 
-    k = get_force_constants(folders)                           # 
-    T = get_transformation_matrix(normal_modes[0])             # np(n x n)
-    E0 = get_total_energies()                                  # 
+def main(filename):
     
+    rt = "vibrations/"
+    folders = ["neutral_0/", "ion_0/", "ion_1/", "ion_4/"]#, "ion_3/", "ion_4/"]
+    folders_v = [rt+f+"delta_"+str(delta)+"/" for f in folders]
+    print("Reading vibrational output")
+    freq = get_frequencies(folders_v)                     
+    mu = get_reduced_masses(folders_v)                    
+    norm_modes = get_normal_modes(folders_v)              
+    T = get_transformation_matrix(norm_modes[0])        
+    pos = get_positions(folders_v)
+    print("Done")
 
-    tot_mass = sum(masses)
-    
+    """
+    pos = []
+    rt = "relaxations/"
+    folders = ["neutral_0/", "ion_0/", "ion_1/", "ion_2/", "ion_3/", "ion_4/"]
+    for fol in folders:
+        f = open(rt+fol+"geometry.in.next_step")
+        d = []
+        for l in f:
+            p = l.split()
+            if p[0] == "atom":
+                d.extend([float(t) for t in p[1:4]])
+        pos.append(d)
+        f.close()
+    pos = [np.array(p) for p in pos]
+    """
+
     # displacements
     disp = []
     for i in range(1, len(folders)):
-        disp.append(positions[i]-positions[0])
+        disp.append(pos[i]-pos[0])
     
+    norm_disp = [np.dot(T, d) for d in disp]
+
+    # displacement info
+    for i, d in enumerate(disp):
+        print("State %i displacement" % i)
+        print("%14s %14.4f\n" % ("Magnitude", np.linalg.norm(d)))
+        print("%14s %14s %14s" % ("Component", "Cartesian", "N. mode coord."))
+        for j, v in enumerate(d):
+            print("%14.i %14.4f %14.4f" % (j, v, norm_disp[i][j]))
+        print("")
+
+    # total energies
+    # TODO: Total energies from another file
+    E0 = []
+    rt = "relaxations/"
+    for fol in folders:
+        f = open(rt+fol+"aims.out")
+        for l in f:
+            if " | Total energy of the DFT / Hartree-Fock s.c.f. calculation      : " in l:
+                E0.append(float(l.split()[11]))
+                break
+        f.close()
+
+    f = open("total_energies.dat", "w")
+    for E in E0:
+        f.write("%14.6f\n" % E)
+    f.close()
+
+    # clearing file
+    f = open(filename, "w")
+    f.write("%10s  %10s\n" % ("I","E (eV)"))
+    f.close()
+
+    c = ["blue", "red", "green", "indigo", "magenta", "aqua", "lime", "teal"]
+   
+    print(len(freq))
+    print(len(mu))
+    print(len(E0))
 
     # writing to file
-    for d in disp:
-        write_intensities(np.dot(T, d), frequencies, red_masses, E0, 290, 1e-6, "b")
-   
+    for i, d in enumerate(disp):
+        write_intensities(np.dot(T, d), freq[i+1], mu[i+1], [E0[0], E0[i+1]], 290, 1e-4, c[i], filename)
+
+
 def only_relaxation(filename):
     
     rt = "vibrations/"
@@ -440,8 +497,8 @@ def only_relaxation(filename):
 
 
 if __name__ == "__main__":
-    only_relaxation("intensity.dat")
-    #main()
+    #only_relaxation("intensity.dat")
+    main("intensity.dat")
 
 
 
