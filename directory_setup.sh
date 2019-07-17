@@ -1,7 +1,10 @@
 #!/bin/bash
 
 # Folder names
+# Root folder
 root=Tetrafluoroethylene
+
+# Subfolders
 sub=('relaxations' 'vibrations' 'restart_files')
 
 # State folders are named so that if the name contains "_oc" the state needs to force occupations. 

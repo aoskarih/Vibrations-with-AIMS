@@ -22,7 +22,7 @@ Some of the scripts require specific folder structure and folder names, so if yo
 
 Benzene will be used as an example throughout this guide and all the default setting are for benzene. This means that we will have neutral ground state from which all the transitions are going to start and we will take five ion states where transitions are going to end. Ion states are going to differ in their electronic occupations.
 
-The script `directory_setup.sh` will make the folders and copy files automatically, but first you should check that scripts `run_relax.sh` and `run_vib.sh` really run AIMS in your system and that list of states and folder names in `directory_setup.sh` match your needs. Now is also the best time to choose the delta that is used as a displacement in the vibrational calculations. The default is 0.0025 Å and it can be changed with script, for example to set delta = 0.001 `./set_delta.sh 0.001`.
+The script `directory_setup.sh` will make the folders and copy files automatically, but first you should check that scripts `run_relax.sh` and `run_vib.sh` really run AIMS in your system and that list of states and folder names in `directory_setup.sh` match your needs. Now is also the best time to choose the delta that is used as a displacement in the vibrational calculations. The default is 0.0025 Å and it can be changed with script. For example to set *delta=0.001* `./set_delta.sh 0.001`.
 
 #### Folders
 
@@ -92,7 +92,7 @@ In addition to normal modes, there's values for force constants, reduced masses 
 
 When the output files of the vibrational calculations are ready, first should be checked that the folder and filenames are correct at the top of the script `FCI.py`. Then the script should be ran in root directory which for our example is "*Benzene*". The script will make a `intensity.dat` file which will have the spectrum we are after. You can change the filename at the bottom of `FCI.py`. When running the script it is recommended to direct the output to a file, for example `python FCI.py >& fci.out`. 
 
-There's few things that can be modified in `FCI.py`. At the top of the file there's variables `S_lim`, `m_lim` and `n_lim`. These control the number of transitions that is calculated. `S_lim` drops out vibrational modes that aren't relevant. `m_lim` is the ceiling for the sum of vibrational quantum numbers of the initial state and `n_lim` is the corresponding value for the final state. There shouln't be any problems with the runtime of the script as long as `m_lim` and `n_lim` are kept reasonably small (defaults: m=2, n=3). 
+There's few things that can be modified in `FCI.py`. At the top of the file there's variables `S_lim`, `m_lim` and `n_lim`. These control the number of transitions that is calculated. `S_lim` drops out vibrational modes that aren't relevant. `m_lim` is the ceiling for the sum of vibrational quantum numbers of the initial state and `n_lim` is the corresponding value for the final state. There shouln't be any problems with the runtime of the script as long as `m_lim` and `n_lim` are kept reasonably small (defaults: *m=2*, *n=3*). 
 
 The script can also be given a file which sets the positions of 0-0 peaks. If no such file is provided the script will read total energies from the relaxation calculations and calculate the positions for the peaks from those values. The file should have the energy of initial state in the first line and then the energies of the final states on their own lines in the same order that they are calculated in the script and nothing else. Example:
 ```
@@ -109,13 +109,33 @@ The output file is a list of energies and corresponding intensities for differen
 
 ### Plotting results
 
+There's a script `plot_intensity.py` which can plot the data that `FCI.py` outputs. It can plot the delta peaks by themselves and it can do gaussian broadening to the peaks. 
+
 
 
 ### Summary
 
+This is a summary of the steps 1-5 assuming all default settings and no problems.
 
+1. Setup
 
+Change the name of the root directory to your liking and then define all the states that you want to your calculations. Edit these to the `directory_setup.sh` and run the script.
 
+2. Relaxation
+
+Make `control.in` files for all of your states and make one `geometry.in` to begin with. Copy these to their respective folders and run the relaxations without occupation. When AIMS is ready, copy `restart` file and run the relaxations with occupations.
+
+3. Restart files
+
+Copy new geometries to right folders in "*restart_files*" directory and copy `control.in` file from one of the calculations without occupations to every folder. Then run the calculations.
+
+4. Vibrational calculations
+
+Copy new geometries and the correspondig control files to right folders in "*vibrations*" directory. Then run the calculations.
+
+5. Transitions
+
+Check that settings are correct in `FCI.py` and then run it.
 
 
 
