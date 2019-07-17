@@ -14,27 +14,41 @@ pi = 3.1416
 u = 1.6605e-27		# kg
 kb = 8.6173e-5		# ev/K
 
+
+# Molecule specific settigs
+##################################
+
+# Limiting number of transitions
 m_lim = 2
 n_lim = 3
 S_lim = 1e-4
 
+
 delta = 0.0025
 
 # data folders
-sub_fol = "delta_"+str(delta)+"/"               # sub folder where output files are
-folders = ["neutral_0/",     # list of folders for different electronic states
-            "ion_0/",        # Transitions are calculated from the 1. state to the others
-            "ion_1/",  
-            "ion_2/", 
-            "ion_3/", 
-            "ion_4/"]
+# Sub folder where output files are
+sub_fol = "delta_"+str(delta)+"/"          
 
-folders = [f+sub_fol for f in folders]
+# List of folders for different electronic states
+# Transitions are calculated from the first state to the others
+folders = ["neutral_0/",                    
+            "ion_0_oc/",                       
+            "ion_1_oc/",  
+            "ion_2_oc/", 
+            "ion_3_oc/", 
+            "ion_4_oc/"]
 
 # file names
 xyz = "run.xyz"                 # xyz file which contains normal modes
 vib = "vib_post_0.0025.out"     # output file which contains frequencies in a list
 mas = "masses.run_0.0025.dat"   # mass file, currently data from here not in use
+
+output_file = "intensity.dat"   # Output filename
+energy_file = ""                # Filename for the 0-0 peak energies. If left empty script will use energies from relaxations.
+
+##################################
+
 
 # returns positions of the atoms from the .xyz file
 # Angstroms
@@ -348,15 +362,12 @@ def write_intensities(d, freq, mu, E0, T, S_limit, c, filename):
             f.write("%10.6f  %10.6f  %s\n" % (I, e_n-e_m, c))
     #############################
     #"""
-
     f.close()
-
 
 def main(filename, tot_energy_file=""):
     
     rt = "vibrations/"
-    folders = ["neutral_0/", "ion_0/", "ion_1/", "ion_4/"]#, "ion_3/", "ion_4/"]
-    folders_v = [rt+f+"delta_"+str(delta)+"/" for f in folders]
+    folders_v = [rt+f+sub_fol for f in folders]
     print("Reading vibrational output")
     freq = get_frequencies(folders_v)                     
     mu = get_reduced_masses(folders_v)                    
@@ -399,7 +410,7 @@ def main(filename, tot_energy_file=""):
 
     # total energies
     E0 = []
-    if tot_energy_file:
+    if tot_energy_file.split():
         f = open(tot_energy_file, "r")
         for l in f:
             E0.append(float(l))
@@ -422,87 +433,22 @@ def main(filename, tot_energy_file=""):
     # TODO: change naming to something sensible and define colors in plotting script
     c = ["blue", "red", "green", "indigo", "magenta", "aqua", "lime", "teal"]
    
-    print(len(freq))
-    print(len(mu))
-    print(len(E0))
 
     # writing to file
     for i, d in enumerate(disp):
         write_intensities(np.dot(T, d), freq[i+1], mu[i+1], [E0[0], E0[i+1]], 290, S_lim, c[i], filename)
 
-
-def only_relaxation(filename):
     
-    rt = "vibrations/"
-    folders = ["neutral_0/", "ion_0/"]#, "ion_1/", "ion_2/", "ion_3/", "ion_4/"]
-    print("Reading vibrational output")
-    freq = get_frequencies(folders)                     
-    mu = get_reduced_masses(folders)                    
-    norm_modes = get_normal_modes(folders)              
-    T = get_transformation_matrix(norm_modes[0])        
-    print("Done")
-
-
-    pos = []
-    rt = "relaxations/"
-    folders = ["neutral_0/", "ion_0/"]#, "ion_1/", "ion_2/", "ion_3/", "ion_4/"]
-    for fol in folders:
-        f = open(rt+fol+"geometry.in.next_step")
-        d = []
-        for l in f:
-            p = l.split()
-            if p[0] == "atom":
-                d.extend([float(t) for t in p[1:4]])
-        pos.append(d)
-        f.close()
-    pos = [np.array(p) for p in pos]
-
-    # displacements
-    disp = []
-    for i in range(1, len(folders)):
-        disp.append(pos[i]-pos[0])
-
-    # displacement info
-    for i, d in enumerate(disp):
-        print("State %i displacement" % i)
-        print("%14s %14.4f\n" % ("Magnitude", np.linalg.norm(d)))
-        print("Components")
-        for j, v in enumerate(d):
-            print("%14.i %14.4f" % (j, v))
-        print("")
-
-    # total energies
-    # TODO: Total energies from another file
-    E0 = []
-    for fol in folders:
-        f = open(rt+fol+"aims.out")
-        for l in f:
-            if " | Total energy of the DFT / Hartree-Fock s.c.f. calculation      : " in l:
-                E0.append(float(l.split()[11]))
-                break
-        f.close()
-
-    f = open("total_energies.dat", "w")
-    for E in E0:
-        f.write("%14.6f\n" % E)
-    f.close()
-
-    # clearing file
-    f = open(filename, "w")
-    f.write("%10s  %10s\n" % ("I","E (eV)"))
-    f.close()
-
-    c = ["r", "g", "b", "c", "m"]
-    
+    """
+    # Using only the frequencies and normal modes of ground state
     # writing to file
     for i, d in enumerate(disp):
-        write_intensities(np.dot(T, d), freq[0], mu[0], [E0[0], E0[i+1]], 290, 1e-4, c[i], filename)
- 
+        write_intensities(np.dot(T, d), freq[0], mu[0], [E0[0], E0[i+1]], 290, S_lim, c[i], filename)
+    """
 
 
 if __name__ == "__main__":
-    #only_relaxation("intensity.dat")
-    main("intensity.dat")
+    main(output_file, energy_file)
 
 
 
