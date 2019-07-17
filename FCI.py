@@ -14,6 +14,9 @@ pi = 3.1416
 u = 1.6605e-27		# kg
 kb = 8.6173e-5		# ev/K
 
+m_lim = 2
+n_lim = 3
+S_lim = 1e-4
 
 delta = 0.0025
 
@@ -297,8 +300,8 @@ def write_intensities(d, freq, mu, E0, T, S_limit, c, filename):
     # itr_m is the list of combinations for ground state and itr_n for exited state
     # first argument in the combinations function is the most important number considering 
     # the script execution time. Anything above m=3 and n=4 not recommended since python isn't that fast.
-    itr_m = combinations(2, len(modes)) 
-    itr_n = combinations(3, len(modes))
+    itr_m = combinations(m_lim, len(modes)) 
+    itr_n = combinations(n_lim, len(modes))
    
     for mode in modes:
         if freq[mode] < 2:
@@ -349,7 +352,7 @@ def write_intensities(d, freq, mu, E0, T, S_limit, c, filename):
     f.close()
 
 
-def main(filename):
+def main(filename, tot_energy_file=""):
     
     rt = "vibrations/"
     folders = ["neutral_0/", "ion_0/", "ion_1/", "ion_4/"]#, "ion_3/", "ion_4/"]
@@ -395,27 +398,28 @@ def main(filename):
         print("")
 
     # total energies
-    # TODO: Total energies from another file
     E0 = []
-    rt = "relaxations/"
-    for fol in folders:
-        f = open(rt+fol+"aims.out")
+    if tot_energy_file:
+        f = open(tot_energy_file, "r")
         for l in f:
-            if " | Total energy of the DFT / Hartree-Fock s.c.f. calculation      : " in l:
-                E0.append(float(l.split()[11]))
-                break
+            E0.append(float(l))
         f.close()
-
-    f = open("total_energies.dat", "w")
-    for E in E0:
-        f.write("%14.6f\n" % E)
-    f.close()
+    else:
+        rt = "relaxations/"
+        for fol in folders:
+            f = open(rt+fol+"aims.out")
+            for l in f:
+                if " | Total energy of the DFT / Hartree-Fock s.c.f. calculation      : " in l:
+                    E0.append(float(l.split()[11]))
+                    break
+            f.close()
 
     # clearing file
     f = open(filename, "w")
     f.write("%10s  %10s\n" % ("I","E (eV)"))
     f.close()
-
+    
+    # TODO: change naming to something sensible and define colors in plotting script
     c = ["blue", "red", "green", "indigo", "magenta", "aqua", "lime", "teal"]
    
     print(len(freq))
@@ -424,7 +428,7 @@ def main(filename):
 
     # writing to file
     for i, d in enumerate(disp):
-        write_intensities(np.dot(T, d), freq[i+1], mu[i+1], [E0[0], E0[i+1]], 290, 1e-4, c[i], filename)
+        write_intensities(np.dot(T, d), freq[i+1], mu[i+1], [E0[0], E0[i+1]], 290, S_lim, c[i], filename)
 
 
 def only_relaxation(filename):
@@ -492,7 +496,7 @@ def only_relaxation(filename):
     
     # writing to file
     for i, d in enumerate(disp):
-        write_intensities(np.dot(T, d), freq, mu, [E0[0], E0[i+1]], 290, 1e-4, c[i], filename)
+        write_intensities(np.dot(T, d), freq[0], mu[0], [E0[0], E0[i+1]], 290, 1e-4, c[i], filename)
  
 
 

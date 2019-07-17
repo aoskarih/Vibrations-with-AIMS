@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Folder names
-root=Benzene
+root=Tetrafluoroethylene
 sub=('relaxations' 'vibrations' 'restart_files')
 
 # State folders are named so that if the name contains "_oc" the state needs to force occupations. 
