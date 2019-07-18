@@ -1,9 +1,6 @@
 
 # Vibrational spectrum with FHI-AIMS
 
-
-## Making vibrational spectrum
-
 This is a step-by-step guide to getting vibrational spectrum for your molecule with FHI-AIMS.
 
 ### Steps
@@ -14,7 +11,8 @@ This is a step-by-step guide to getting vibrational spectrum for your molecule w
 4. [Running vibrational calculations](#running-vibrational-calculations)
 5. [Calculating transition intensities](#calculating-transition-intensities)
 6. [Plotting results](#plotting-results)
-7. [Summary](#summary)
+A. [Summary](#summary)
+B. [List of scripts](#list-of-scripts)
 
 ### Setting up directory
 
@@ -109,9 +107,7 @@ The output file is a list of energies and corresponding intensities for differen
 
 ### Plotting results
 
-There's a script `plot_intensity.py` which can plot the data that `FCI.py` outputs. It can also calculate the shift from 0-0 peak caused by vibrations.  
-
-
+There's a script `plot_intensity.py` which can plot the data that `FCI.py` outputs. It can also calculate the shift from 0-0 peak caused by vibrations. In the bottom of the `plot_intensities.py` there's place where functions can be called to make plots.
 
 ### Summary
 
@@ -136,6 +132,20 @@ Copy new geometries and the correspondig control files to right folders in "*vib
 5. Transitions
 
 Check that settings are correct in `FCI.py` and then run it.
+
+### List of scripts
+
+
+`directory_setup.sh`
+
+
+
+`FCI.py`
+
+
+
+`get_vibrations.py`
+
 
 
 
