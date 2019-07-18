@@ -1,35 +1,41 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-mi = 8.0
+# xlim, ylim
+mi = 9.0
 ma = 15.0
+# sigma for gaussian
 sig = 0.05
+# line resolution
 dx = 0.001
 x = np.arange(mi, ma, dx)
 
+# sigmas for plot_gauss()
 sigl = [0.05, 0.08, 0.15, 0.3]
 
+# colors for states when plotting
 cl = ["blue","red","green","indigo","magenta","aqua","lime","teal"]
 
+# gaussian function
 def gaussian(x, mu, sig):
     return 1/(sig*np.sqrt(2*np.pi)) * np.exp(-np.power(x - mu, 2) / (2 * np.power(sig, 2)))
 
+# some figures to begin with
 fig1 = plt.figure(figsize=(13, 11))
-fig2 = plt.figure(figsize=(13, 11))
+#fig2 = plt.figure(figsize=(13, 11))
 fig3 = plt.figure(figsize=(13, 11))
 
-fig1.subplots_adjust(hspace=0.1)
-fig2.subplots_adjust(hspace=0.1)
-
-ax1 = fig1.add_subplot(211)
-ax12 = fig1.add_subplot(212, sharex=ax1)
-ax2 = fig2.add_subplot(211)
-ax22 = fig2.add_subplot(212, sharex=ax2)
-
+# list for plot_zz()
 tot_gauss = []
 
+# Plots the delta peaks by themselves and with gaussian broadening
+# parameters: data file, figure, title
+def plot_data(filename, fig, title):
+    peaks_only = 1
 
-def plotting(filename, ax, title, peaks_only=0):
+    ax = fig.add_subplot(211)
+    ax12 = fig.add_subplot(212, sharex=ax)
+    fig.subplots_adjust(hspace=0.1)
     dat_I = []
     dat_E = []
     col = []
@@ -45,7 +51,7 @@ def plotting(filename, ax, title, peaks_only=0):
         p = l.split()
         dat_I.append(float(p[0]))
         dat_E.append(abs(float(p[1])))
-        c = p[2]
+        c = int(p[2])
         if c not in col:
             zz_peaks.append((float(p[0]), abs(float(p[1]))))
             dic[c] = ind
@@ -53,7 +59,6 @@ def plotting(filename, ax, title, peaks_only=0):
         col.append(c)
     f.close()
     
-
     print("Reading done")
     n = len(dic)
 
@@ -114,6 +119,8 @@ def plotting(filename, ax, title, peaks_only=0):
     
     ax.legend()
 
+# Plots several spectrum on the same figure. 
+# Not maintained.
 def plot_zz(fig):
     pbe = []
     dci = []
@@ -216,8 +223,8 @@ def plot_zz(fig):
     ax.set_xlabel("Energy (eV)")
     ax.legend()
 
-
-def plot_dci_vib(filename, ax):
+# Same as plotting() but places of 0-0 peaks are shifted accordin to shift_file.
+def plot_shift_vib(filename, shift_file, ax, title):
     dat_I = []
     dat_E = []
     col = []
@@ -243,16 +250,15 @@ def plot_dci_vib(filename, ax):
 
     dci = []
 
-    f = open("DCI.dat", "r")
+    f = open(shift_file, "r")
     for l in f:
         dci.append(float(l))
     f.close()
 
     for i in range(len(dat_E)):
         dat_E[i] -= zz_peaks[dic[col[i]]][1]
-        dat_E[i] += dci[dic[col[i]]]
+        dat_E[i] += dci[dic[col[i]]+1]
     
-
     print("Reading done")
     n = len(dic)
 
@@ -287,7 +293,7 @@ def plot_dci_vib(filename, ax):
     tot_gauss.append(y_all)
     ax.plot(x, y_all, "-", color="black")
 
-    ax.set_title("Neutral -> Ion - DCI:0-0, DFT:vib")
+    ax.set_title(title)
 
     ax.set_xlim(mi, ma)
     #ax.set_ylim(0, 3)
@@ -301,8 +307,9 @@ def plot_dci_vib(filename, ax):
     
     ax.legend()
 
-
-def plot_gauss(filename, tr, limits, ax):
+# plots the state alone and calculates the shift from 0-0 for different sigma
+# parameters: data file, state, subplot
+def plot_gauss(filename, tr, ax):
     dat_I = []
     dat_E = []
     print("Reading file")
@@ -315,7 +322,7 @@ def plot_gauss(filename, tr, limits, ax):
 
     for l in f:
         p = l.split()
-        if p[2] == tr:
+        if int(p[2]) == tr:
             dat_I.append(float(p[0]))
             dat_E.append(abs(float(p[1])))
     f.close()
@@ -346,10 +353,9 @@ def plot_gauss(filename, tr, limits, ax):
 
     print("Plotting")
     
-    ax.plot([mi+max_0*dx, mi+max_0*dx], [0, y0[max_0]], "--")
+    ax.plot([mi+max_0*dx, mi+max_0*dx], [0, y[0][max_all[0]]], "--")
     for i in range(n):
         ax.plot([mi+max_all[i]*dx, mi+max_all[i]*dx], [0, y[i][max_all[i]]], "--", c=col[i])
-    
     for i in range(len(dat_I)):
         ax.plot([dat_E[i], dat_E[i]], [0, dat_I[i]], c="b", lw=2.0)
 
@@ -359,24 +365,15 @@ def plot_gauss(filename, tr, limits, ax):
         #ax.plot(x, y[i], "-", c=col[i], label=r'$d_%s = %4.3f \: \mathrm{eV}$' % (lab[i], abs(x[max_0]-x[max_all[i]])))
         ax.plot(x, y[i], "-", c=col[i], label='d_%s = %4.3f eV' % (lab[i], abs(x[max_0]-x[max_all[i]])))
 
-    ax.set_xlim(limits[0], limits[1])
+    ax.set_xlim(mi+max_0*dx-0.6, mi+max_0*dx+1.4)
     #ax.set_ylim(0, 3)
-    
     ax.set_yticks([])
     #ax.set_xticks([])
-    
     ax.legend()
 
+def plot_peak_shift(filename, states, fig):
 
-if __name__ == "__main__":
-    #plotting("emission_i.dat", ax1, "Ion -> Neutral")
-    plotting("intensity.dat", ax1, "Neutral -> Ion - PBE:0-0, PBE:vib", 1)
-    
-    #plotting("neutral-ion_if.dat", ax2, "Neutral -> Ion - Ion freq", 1)
-    #plot_zz(fig3)
-
-     
-    ax9 = fig3.add_subplot(111)
+    ax9 = fig.add_subplot(111)
     ax9.set_xlim(mi, ma)
     ax9.spines['top'].set_color('none')
     ax9.spines['bottom'].set_color('none')
@@ -384,25 +381,29 @@ if __name__ == "__main__":
     ax9.spines['right'].set_color('none')
     ax9.set_yticks([])
     ax9.set_xticks([])
-    
     ax9.set_xlabel("Energy (eV)")
 
     #ax9.set_title("Peak shift")
     # Latex in pyplot might not work
     ax9.set_title(r'$\mathrm{Sigma \  comparison} \quad \sigma_a=0.05 \quad \sigma_b=0.08 \quad \sigma_c=0.15 \quad \sigma_d=0.3$')
-   
     ax9.xaxis.set_label_coords(0.5, -0.04)
-
-    fig3.subplots_adjust(hspace=0.1)
-
-    plot_gauss("intensity.dat", "blue", [8.5, 10.5], fig3.add_subplot(311))
-    plot_gauss("intensity.dat", "red", [10, 12], fig3.add_subplot(312))
-    plot_gauss("intensity.dat", "green", [11, 13], fig3.add_subplot(313))
+    fig.subplots_adjust(hspace=0.1)
     
+    for s in states:
+        sp = str(len(states))+"1"+str(s+1)
+        plot_gauss(filename, s, fig.add_subplot(int(sp)))
 
-    #fig1.savefig("results/neutral-ion_dci_c_290K.png")
-    #fig2.savefig("results/ion-neutral_b3lyp_c_290K.png")
-    #fig3.savefig("results/neutral-ion_zz_comp_b3.png")
+
+
+if __name__ == "__main__":
+   
+    # Plots peaks from a file to figure
+    plot_data("intensity.dat", fig1, "Neutral -> Ion - DCI:0-0, PBE:vib")
+    
+    plot_peak_shift("intensity.dat", [0, 1, 2], fig3)
+
+    # Saving figure
+    #fig1.savefig("results/neutral-ion_dci.png")
     
     
     plt.show()
