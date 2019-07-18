@@ -9,6 +9,8 @@ x = np.arange(mi, ma, dx)
 
 sigl = [0.05, 0.08, 0.15, 0.3]
 
+cl = ["blue","red","green","indigo","magenta","aqua","lime","teal"]
+
 def gaussian(x, mu, sig):
     return 1/(sig*np.sqrt(2*np.pi)) * np.exp(-np.power(x - mu, 2) / (2 * np.power(sig, 2)))
 
@@ -51,11 +53,6 @@ def plotting(filename, ax, title, peaks_only=0):
         col.append(c)
     f.close()
     
-    f = open("total_energies.dat", "r")
-    E0 = []
-    for l in f:
-        E0.append(float(l))
-    f.close()
 
     print("Reading done")
     n = len(dic)
@@ -89,12 +86,12 @@ def plotting(filename, ax, title, peaks_only=0):
     """
     for i in range(len(dat_I)):
         if peaks_only:
-            ax22.plot([dat_E[i], dat_E[i]], [0, dat_I[i]], color=col[i], lw=2.0)
-        ax.plot([dat_E[i], dat_E[i]], [0, dat_I[i]], color=col[i], lw=2.0)
+            ax12.plot([dat_E[i], dat_E[i]], [0, dat_I[i]], color=cl[col[i]], lw=2.0)
+        ax.plot([dat_E[i], dat_E[i]], [0, dat_I[i]], color=cl[col[i]], lw=2.0)
 
     for i, c in enumerate(set(col)):
-        ax.plot(x, y[dic[c]], "-", color=c, label="")
-        #ax.plot(x, y0[dic[c]], "-.", lw=1.5, color=c)
+        ax.plot(x, y[dic[c]], "-", color=cl[c], label="")
+        #ax.plot(x, y0[dic[c]], "-.", lw=1.5, color=cl[c])
 
     y_all = np.zeros(len(x))
     for i, v in enumerate(x):
@@ -110,10 +107,10 @@ def plotting(filename, ax, title, peaks_only=0):
     #ax.set_xlabel("Energy (eV)")
     ax.set_ylabel("Relative intensity")
     
-    ax22.set_xlim(mi, ma)
-    #ax22.set_ylim(0, 0.5)
-    ax22.set_xlabel("Energy (eV)")
-    ax22.set_ylabel("Relative intensity")
+    ax12.set_xlim(mi, ma)
+    #ax12.set_ylim(0, 0.5)
+    ax12.set_xlabel("Energy (eV)")
+    ax12.set_ylabel("Relative intensity")
     
     ax.legend()
 
@@ -277,8 +274,8 @@ def plot_dci_vib(filename, ax):
     print("Plotting")
 
     for i in range(len(dat_I)):
-        ax12.plot([dat_E[i], dat_E[i]], [0, dat_I[i]], color=col[i], lw=2.0)
-        ax.plot([dat_E[i], dat_E[i]], [0, dat_I[i]], color=col[i], lw=2.0)
+        ax22.plot([dat_E[i], dat_E[i]], [0, dat_I[i]], color=cl[col[i]], lw=2.0)
+        ax.plot([dat_E[i], dat_E[i]], [0, dat_I[i]], color=cl[col[i]], lw=2.0)
 
     for c in set(col):
         ax.plot(x, y[dic[c]], "-", color=c)
@@ -297,10 +294,10 @@ def plot_dci_vib(filename, ax):
     #ax.set_xlabel("Energy (eV)")
     ax.set_ylabel("Relative intensity")
     
-    ax12.set_xlim(mi, ma)
-    #ax12.set_ylim(0, 0.5)
-    ax12.set_xlabel("Energy (eV)")
-    ax12.set_ylabel("Relative intensity")
+    ax22.set_xlim(mi, ma)
+    #ax22.set_ylim(0, 0.5)
+    ax22.set_xlabel("Energy (eV)")
+    ax22.set_ylabel("Relative intensity")
     
     ax.legend()
 
@@ -373,14 +370,12 @@ def plot_gauss(filename, tr, limits, ax):
 
 if __name__ == "__main__":
     #plotting("emission_i.dat", ax1, "Ion -> Neutral")
-    plotting("absorption_i.dat", ax1, "Neutral -> Ion - PBE:0-0, PBE:vib", 1)
-    plotting("neutral-ion_if.dat", ax2, "Neutral -> Ion - Ion freq", 1)
+    plotting("intensity.dat", ax1, "Neutral -> Ion - PBE:0-0, PBE:vib", 1)
     
-    #plot_dci_vib("absorption_i.dat", ax1)
-
+    #plotting("neutral-ion_if.dat", ax2, "Neutral -> Ion - Ion freq", 1)
     #plot_zz(fig3)
 
-    """ 
+     
     ax9 = fig3.add_subplot(111)
     ax9.set_xlim(mi, ma)
     ax9.spines['top'].set_color('none')
@@ -392,18 +387,18 @@ if __name__ == "__main__":
     
     ax9.set_xlabel("Energy (eV)")
 
-    ax9.set_title("Peak shift")
+    #ax9.set_title("Peak shift")
     # Latex in pyplot might not work
-    #ax9.set_title(r'$\mathrm{Sigma \  comparison} \quad \sigma_a=0.05 \quad \sigma_b=0.08 \quad \sigma_c=0.15 \quad \sigma_d=0.3$')
+    ax9.set_title(r'$\mathrm{Sigma \  comparison} \quad \sigma_a=0.05 \quad \sigma_b=0.08 \quad \sigma_c=0.15 \quad \sigma_d=0.3$')
    
     ax9.xaxis.set_label_coords(0.5, -0.04)
 
     fig3.subplots_adjust(hspace=0.1)
 
-    plot_gauss("absorption_i.dat", "g", [8.5, 10.5], fig3.add_subplot(311))
-    plot_gauss("absorption_i.dat", "b", [10, 12], fig3.add_subplot(312))
-    plot_gauss("absorption_i.dat", "m", [11, 13], fig3.add_subplot(313))
-    """
+    plot_gauss("intensity.dat", "blue", [8.5, 10.5], fig3.add_subplot(311))
+    plot_gauss("intensity.dat", "red", [10, 12], fig3.add_subplot(312))
+    plot_gauss("intensity.dat", "green", [11, 13], fig3.add_subplot(313))
+    
 
     #fig1.savefig("results/neutral-ion_dci_c_290K.png")
     #fig2.savefig("results/ion-neutral_b3lyp_c_290K.png")
