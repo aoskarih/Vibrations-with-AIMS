@@ -431,8 +431,7 @@ def main(filename, tot_energy_file=""):
     f.close()
     
     # TODO: change naming to something sensible and define colors in plotting script
-    c = ["blue", "red", "green", "indigo", "magenta", "aqua", "lime", "teal"]
-   
+    c = range(len(folders))
 
     # writing to file
     for i, d in enumerate(disp):

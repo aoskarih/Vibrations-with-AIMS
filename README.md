@@ -92,7 +92,7 @@ In addition to normal modes, there's values for force constants, reduced masses 
 
 When the output files of the vibrational calculations are ready, first should be checked that the folder and filenames are correct at the top of the script `FCI.py`. Then the script should be ran in root directory which for our example is "*Benzene*". The script will make a `intensity.dat` file which will have the spectrum we are after. You can change the filename at the bottom of `FCI.py`. When running the script it is recommended to direct the output to a file, for example `python FCI.py >& fci.out`. 
 
-There's few things that can be modified in `FCI.py`. At the top of the file there's variables `S_lim`, `m_lim` and `n_lim`. These control the number of transitions that is calculated. `S_lim` drops out vibrational modes that aren't relevant. `m_lim` is the ceiling for the sum of vibrational quantum numbers of the initial state and `n_lim` is the corresponding value for the final state. There shouln't be any problems with the runtime of the script as long as `m_lim` and `n_lim` are kept reasonably small (defaults: *m=2*, *n=3*). 
+There's few things that can be modified in `FCI.py`. At the top of the file there's variables `S_lim`, `m_lim` and `n_lim`. These control the number of transitions that is calculated. `S_lim` drops out vibrational modes that aren't relevant. `m_lim` is the ceiling for the sum of vibrational quantum numbers of the initial state and `n_lim` is the corresponding value for the final state. There shouln't be any problems with the runtime of the script as long as `m_lim` and `n_lim` are kept reasonably small (defaults: *m=2*, *n=3*). If script seems to take too long to finish even with small *m* and *n* check the output of the script if there's a large number (>10) of relevant modes. If so, then make `S_lim` larger.
 
 The script can also be given a file which sets the positions of 0-0 peaks. If no such file is provided the script will read total energies from the relaxation calculations and calculate the positions for the peaks from those values. The file should have the energy of initial state in the first line and then the energies of the final states on their own lines in the same order that they are calculated in the script and nothing else. Example:
 ```
@@ -109,7 +109,7 @@ The output file is a list of energies and corresponding intensities for differen
 
 ### Plotting results
 
-There's a script `plot_intensity.py` which can plot the data that `FCI.py` outputs. It can plot the delta peaks by themselves and it can do gaussian broadening to the peaks. 
+There's a script `plot_intensity.py` which can plot the data that `FCI.py` outputs. It can also calculate the shift from 0-0 peak caused by vibrations.  
 
 
 

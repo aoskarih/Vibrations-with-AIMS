@@ -2,13 +2,13 @@
 
 # Folder names
 # Root folder
-root=Tetrafluoroethylene
+root=Ozone
 
 # Subfolders
 sub=('relaxations' 'vibrations' 'restart_files')
 
 # State folders are named so that if the name contains "_oc" the state needs to force occupations. 
-states=('neutral_0' 'ion_0_oc' 'ion_1_oc' 'ion_2_oc' 'ion_3_oc' 'ion_4_oc')
+states=('neutral_0' 'ion_0_oc' 'ion_1_oc' 'ion_2_oc') #'ion_3_oc' 'ion_4_oc')
 
 # Script names
 run_vib=run_vib.sh

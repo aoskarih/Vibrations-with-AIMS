@@ -1,6 +1,7 @@
 # Gitignore
 
 .*.swp
+/Ozone/*
 /Benzene/*
 /Thymine/*
 /Tetrafluoroethylene/*
