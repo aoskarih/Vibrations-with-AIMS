@@ -1,0 +1,3 @@
+Loading application python-2.7.6 environment with needed modules
+OMP_NUM_THREADS set to 1
+If you are using OpenMP threaded libraries you need to set this variable to the number of cores you are requesting per process

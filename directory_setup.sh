@@ -2,13 +2,13 @@
 
 # Folder names
 # Root folder
-root=TCNE
+root=Oxygen
 
 # Subfolders
 sub=('relaxations' 'vibrations' 'restart_files')
 
 # State folders are named so that if the name contains "oc" the state needs to force occupations. 
-states=('neutral_0' 'ion_oc_0' 'ion_oc_1' 'ion_oc_2' 'ion_oc_3' 'ion_oc_4' 'ion_oc_5' 'ion_oc_6' 'ion_oc_7' 'ion_oc_8' 'ion_oc_9' 'ion_oc_10' 'ion_oc_11' 'ion_oc_12' 'ion_oc_13')
+states=('neutral_0' 'ion_oc_0' 'ion_oc_1' 'ion_oc_2' 'ion_oc_3' 'ion_oc_4')
 
 # Script names
 run_vib=run_vib.sh

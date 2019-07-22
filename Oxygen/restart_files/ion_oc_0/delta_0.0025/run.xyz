@@ -1,0 +1,24 @@
+     2
+unstable frequency at   -540.691 1/cm IR int. is 4.8134e-20 D^2/Ang^2; red. mass is 15.999 a.m.u.; force const. is 2.756 mDyne/Ang.
+O        -0.0000    0.0000    0.0424    0.7071   -0.0001    0.0000
+O        -0.0000    0.0000    1.1651   -0.7071    0.0001   -0.0000
+     2
+unstable frequency at   -540.691 1/cm IR int. is 1.8600e-21 D^2/Ang^2; red. mass is 15.999 a.m.u.; force const. is 2.756 mDyne/Ang.
+O        -0.0000    0.0000    0.0424    0.0001    0.7071   -0.0000
+O        -0.0000    0.0000    1.1651   -0.0001   -0.7071    0.0000
+     2
+unstable frequency at     -0.012 1/cm IR int. is 6.2678e-20 D^2/Ang^2; red. mass is 15.999 a.m.u.; force const. is 0.000 mDyne/Ang.
+O        -0.0000    0.0000    0.0424   -0.6718    0.2208    0.0004
+O        -0.0000    0.0000    1.1651   -0.6718    0.2208    0.0004
+     2
+stable frequency at      0.000 1/cm IR int. is 2.0532e-21 D^2/Ang^2; red. mass is 15.999 a.m.u.; force const. is 0.000 mDyne/Ang.
+O        -0.0000    0.0000    0.0424   -0.0000   -0.0013    0.7071
+O        -0.0000    0.0000    1.1651   -0.0000   -0.0013    0.7071
+     2
+stable frequency at      0.000 1/cm IR int. is 3.7100e-20 D^2/Ang^2; red. mass is 15.999 a.m.u.; force const. is 0.000 mDyne/Ang.
+O        -0.0000    0.0000    0.0424    0.2208    0.6718    0.0011
+O        -0.0000    0.0000    1.1651    0.2208    0.6718    0.0011
+     2
+stable frequency at   2151.746 1/cm IR int. is 1.1692e-22 D^2/Ang^2; red. mass is 15.999 a.m.u.; force const. is 43.645 mDyne/Ang.
+O        -0.0000    0.0000    0.0424    0.0000   -0.0000   -0.7071
+O        -0.0000    0.0000    1.1651   -0.0000   -0.0000    0.7071

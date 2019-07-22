@@ -33,11 +33,11 @@ sub_fol = "delta_"+str(delta)+"/"
 # List of folders for different electronic states
 # Transitions are calculated from the first state to the others
 folders = ["neutral_0/",                    
-            "ion_0_oc/",                       
-            "ion_1_oc/",  
-            "ion_2_oc/", 
-            "ion_3_oc/", 
-            "ion_4_oc/"]
+            "ion_oc_0/",                       
+            "ion_oc_1/",  
+            "ion_oc_2/", 
+            "ion_oc_3/", 
+            "ion_oc_4/"]
 
 # file names
 xyz = "run.xyz"                 # xyz file which contains normal modes
@@ -340,7 +340,7 @@ def write_intensities(d, freq, mu, E0, T, S_limit, c, filename):
                 n[mode] = comb_n[i]
             I = intensity(d, freq, mu, m, n, T, S_limit, modes)
             # Filter out irrelevant transitions
-            if I < 1e-3: continue
+            if I < 1e-3 and sum(m) + sum(n) > 0: continue
             # Get the energy of final state
             e_n = get_vib_energy(freq, n, E0[1])
             f.write("%10.6f  %10.6f  %s\n" % (I, e_n-e_m, c))

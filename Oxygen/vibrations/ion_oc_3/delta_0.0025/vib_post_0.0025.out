@@ -1,0 +1,34 @@
+Entering hessian diagonalization
+Number of atoms                = 2
+Name of Hessian input file     = hessian.run.dat
+Name of grad dipole input file = grad_dipole.run.dat
+Name of Masses  input file     = masses.run.dat
+Name of XYZ output file        = run.xyz
+Threshold for Matrix elements  = -1
+     All matrix elements are taken into account by default
+
+Solving eigenvalue system for Hessian Matrix
+Done ... 
+Results
+
+List of all frequencies found:
+Mode number      Frequency [cm^(-1)]   Zero point energy [eV]   IR-intensity [D^2/Ang^2]
+          1              -0.02638055              -0.00000164               0.72097971
+          2              -0.00440964              -0.00000027               0.72098680
+          3              -0.00145353              -0.00000009               0.72099089
+          4               2.72437936               0.00016889               0.00000189
+          5               2.80034875               0.00017360               0.00001160
+          6            1923.12803648               0.11921874               0.00000000
+
+
+Summary of zero point energy for entire system:
+| Cumulative ZPE               =      0.11955923 eV
+| without first six eigenmodes =      0.00000000 eV
+
+Stability checking - eigenvalues should all be positive for a stable structure. 
+The six smallest frequencies should be (almost) zero:
+              -0.00000164              -0.00000027              -0.00000009               0.00016889               0.00017360               0.11921874
+Compare this with the largest eigenvalue, 
+            1923.12803648
+
+ Done. 
