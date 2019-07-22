@@ -10,9 +10,9 @@ This is a step-by-step guide to getting vibrational spectrum for your molecule w
 3. [Generating restart files](#generating-restart-files)
 4. [Running vibrational calculations](#running-vibrational-calculations)
 5. [Calculating transition intensities](#calculating-transition-intensities)
-6. [Plotting results](#plotting-results)
-A. [Summary](#summary)
-B. [List of scripts](#list-of-scripts)
+6. [Plotting results](#plotting-results)\
+A. [Summary](#summary)\
+B. [List of scripts](#list-of-scripts)\
 
 ### Setting up directory
 
@@ -113,38 +113,41 @@ There's a script `plot_intensity.py` which can plot the data that `FCI.py` outpu
 
 This is a summary of the steps 1-5 assuming all default settings and no problems.
 
-1. Setup
-
+1. Setup\
 Change the name of the root directory to your liking and then define all the states that you want to your calculations. Edit these to the `directory_setup.sh` and run the script.
 
-2. Relaxation
-
+2. Relaxation\
 Make `control.in` files for all of your states and make one `geometry.in` to begin with. Copy these to their respective folders and run the relaxations without occupation. When AIMS is ready, copy `restart` file and run the relaxations with occupations.
 
-3. Restart files
-
+3. Restart files\
 Copy new geometries to right folders in "*restart_files*" directory and copy `control.in` file from one of the calculations without occupations to every folder. Then run the calculations.
 
-4. Vibrational calculations
-
+4. Vibrational calculations\
 Copy new geometries and the correspondig control files to right folders in "*vibrations*" directory. Then run the calculations.
 
-5. Transitions
-
+5. Transitions\
 Check that settings are correct in `FCI.py` and then run it.
 
 ### List of scripts
 
 
-`directory_setup.sh`
+`directory_setup.sh`\
+Script sets up folders and copies some necessary files to them. It also modifies the `get_vibrations_occ.py` scripts to copy right restart files when ran. Variable `root` and list `states` should be checked and modified before running the script.
 
+`FCI.py`\
+Script calculates the transitions and their intensities between electronic states that are defined in the list `folders` in the beginning of the file. Transitions start always from the same electronic state which is the first state in the list. 
 
+`get_vibrations.py`\
+Script for calculating vibrational modes and frequencies. For more info see section "*Calculation of vibrational and phonon frequencies*" in AIMS manual.
 
-`FCI.py`
+`get_vibrations_occ.py`\
+Slightly modified version of `get_vibrations.py`. Copies the restart files necessary for calculations with occupations.
 
+`run_relax.sh`\
+Runs AIMS and directs output to a file. Make sure that script really finds AIMS.
 
-
-`get_vibrations.py`
+`run_vib.sh`\
+Sets up a directory and runs vibrational calculations. Make sure that script really finds AIMS.
 
 
 

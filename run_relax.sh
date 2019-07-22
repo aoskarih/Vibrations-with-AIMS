@@ -1,9 +1,9 @@
 #!/bin/bash
 #SBATCH -J FHI-AIMS
 #SBATCH --partition=serial
-#SBATCH --time=00:19:59
+#SBATCH --time=00:29:59
 ##SBATCH -N 1
-#SBATCH -n 8
+#SBATCH -n 4
 #SBATCH --mem-per-cpu=1900
 #SBATCH --cpus-per-task=1
 #SBATCH -o AIMS_output
