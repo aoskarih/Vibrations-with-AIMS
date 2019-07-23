@@ -110,6 +110,10 @@ The output file is a list of energies and corresponding intensities for differen
 
 There's a script `plot_intensity.py` which can plot the data that `FCI.py` outputs. It can also calculate the shift from 0-0 peak caused by vibrations. In the bottom of the `plot_intensities.py` there's place where functions can be called to make plots.
 
+`plot_data(...)` plots the delta peaks and does the gaussian broadening to them. `plot_peak_shift()` calculates and draws the shift in peak intensity caused by vibrations.
+
+![Energy spectra of benzene](https://github.com/aoskarih/Vibrations-with-AIMS/edit/master/neutral-ion_GW.png)
+
 ### Summary
 
 This is a summary of the steps 1-5 assuming all default settings and no problems.
@@ -132,25 +136,25 @@ Check that settings are correct in `FCI.py` and then run it.
 ### List of scripts
 
 
-+`directory_setup.sh`\
++ `directory_setup.sh`\
 Script sets up folders and copies some necessary files to them. It also modifies the `get_vibrations_occ.py` scripts to copy right restart files when ran. Variable `root` and list `states` should be checked and modified before running the script.
 
-+`FCI.py`\
++ `FCI.py`\
 Script calculates the transitions and their intensities between electronic states that are defined in the list `folders` in the beginning of the file. Transitions start always from the same electronic state which is the first state in the list. 
 
-+`get_vibrations.py`\
++ `get_vibrations.py`\
 Script for calculating vibrational modes and frequencies. For more info see section "*Calculation of vibrational and phonon frequencies*" in AIMS manual.
 
-+`get_vibrations_occ.py`\
++ `get_vibrations_occ.py`\
 Slightly modified version of `get_vibrations.py`. Copies the restart files necessary for calculations with occupations.
 
-+`plot_intensity.py`\
++ `plot_intensity.py`\
 Script for plotting the output of `FCI.py`. 
 
-+`run_relax.sh`\
++ `run_relax.sh`\
 Runs AIMS and directs output to a file. Make sure that script really finds AIMS.
 
-+`run_vib.sh`\
++ `run_vib.sh`\
 Sets up a directory and runs vibrational calculations. Make sure that script really finds AIMS.
 
 
