@@ -71,7 +71,7 @@ If you have to force occupations in degenerate electron levels, be aware that AI
 
 ### Generating restart files
 
-Because calculations, where occupations are forced, need restart files and for restart file to work `geometry.in` files must be identical, we need 6N restart files per state (N is number of atoms). To make these files, first copy `geometry.in.next_step` files from "*relaxations*" to matching folders in "*restart_files*" and rename them `geometry.in`. Then copy the `control.in` file that was used for the initial state to all of the folders in "*restart_files*". 
+Because calculations, where occupations are forced, need restart files and for restart file to work `geometry.in` files must be identical, we need 6N restart files per state (N is number of atoms). To make these files, first copy `geometry.in.next_step` files from "*relaxations*" to matching folders in "*restart_files*" and rename them `geometry.in`. Then copy the `control.in` file that was used for the initial state to all of the folders in "*restart_files*". You can also run the script `copy_input.sh` which will copy the files. It should be ran in root directory.
 
 Restart files are needed only for the states that force occupations, so for our example we don't need to touch *neutral_0* or *ion_0* states at all. But the other states are ready and next `run_vib.sh` should be ran in those folders. It will make new folder "*delta_0.0025*" and vibrational calculations will be done there. Because `control.in` and `geometry.in` files don't match in these calculations, results will be wrong. But restart files will be generated for all the steps of the calculation and these will be used in the next step.
 
@@ -81,7 +81,7 @@ The 0.0025 in "*delta_0.0025*" is the displacement used when doing the vibration
 
 ### Running vibrational calculations
 
-Now that we have all the restart files and proper geometries we can begin the actual vibrational calculations. First we need to copy relaxed geometries and `control.in` files from "*relaxations*" to "*vibrations*". This time we want the `control.in` files specific to state and again remember to rename `geometry.in.next_step` to just `geometry.in`. When these files are in place, everything should be ready and you only need to run the script `run_vib.sh` in every directory under "*vibrations*". 
+Now that we have all the restart files and proper geometries we can begin the actual vibrational calculations. First we need to copy relaxed geometries and `control.in` files from "*relaxations*" to "*vibrations*". This time we want the `control.in` files specific to state and again remember to rename `geometry.in.next_step` to just `geometry.in`. If you ran the `copy_input.sh` previously, then all the files shoudl be copied already. When these files are in place, everything should be ready and you only need to run the script `run_vib.sh` in every directory under "*vibrations*". 
 
 After aims has finished there will be output files in all of the `vibrations/state/delta_0.0025/` directories. What we are interested in are the `run.xyz` and `vib_post_0.0025.out` files. You should check that values in `run.xyz` are in float format. Some times they appear as complex numbers, example: `0.12345+0.00000j`. That can be usually fixed by running the script again: `python get_vibrations.py run 1 >& vib_post_0.0025.out`. 
 
@@ -119,22 +119,24 @@ There's a script `plot_intensity.py` which can plot the data that `FCI.py` outpu
 This is a summary of the steps 1-5 assuming all default settings and no problems.
 
 1. *Setup*\
-Change the name of the root directory to your liking and then define all the states that you want to your calculations. Edit these to the `directory_setup.sh` and run the script.
+By editing `directory_setup.sh`, change the name of the root directory to your liking and then define all the states that you want in your calculations. Then run the script.
 
 2. *Relaxation*\
 Make `control.in` files for all of your states and make one `geometry.in` to begin with. Copy these to their respective folders and run the relaxations without occupations. When AIMS is ready, copy `restart` file and run the relaxations with occupations.
 
 3. *Restart files*\
-Copy new geometries to right folders in "*restart_files*" directory and copy `control.in` file from one of the calculations without occupations to every folder. Then run the calculations.
+First run `copy_input.sh` in root directory. Then run the calculations in "*restart_files*".
 
 4. *Vibrational calculations*\
-Copy new geometries and the correspondig control files to right folders in "*vibrations*" directory. Then run the calculations.
+Run the calculations in "*vibrations*" directory.
 
 5. *Transitions*\
 Check that settings are correct in `FCI.py` and then run it.
 
 ### List of scripts
 
++ `copy_input.sh`\
+Script handles the copying required in the steps 3 and 4.
 
 + `directory_setup.sh`\
 Script sets up folders and copies some necessary files to them. It also modifies the `get_vibrations_occ.py` scripts to copy right restart files when ran. Variable `root` and list `states` should be checked and modified before running the script.
@@ -157,6 +159,7 @@ Runs AIMS and directs output to a file. Make sure that script really finds AIMS.
 + `run_vib.sh`\
 Sets up a directory and runs vibrational calculations. Make sure that script really finds AIMS.
 
-
++ `set_delta.sh`\
+If you want to change the delta used in the vibrational calculations, then run this script with the new delta as a parameter before first step. 
 
 
