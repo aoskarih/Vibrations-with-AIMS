@@ -112,7 +112,7 @@ There's a script `plot_intensity.py` which can plot the data that `FCI.py` outpu
 
 `plot_data(...)` plots the delta peaks and does the gaussian broadening to them. `plot_peak_shift()` calculates and draws the shift in peak intensity caused by vibrations.
 
-![alt text](https://github.com/aoskarih/Vibrations-with-AIMS/edit/master/neutral-ion_GW.png "Energy spectra of benzene")
+![Energy spectra of benzene](https://raw.githubusercontent.com/aoskarih/Vibrations-with-AIMS/master/neutral-ion_GW.png)
 
 ### Summary
 
