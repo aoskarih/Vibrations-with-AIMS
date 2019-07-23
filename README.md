@@ -162,4 +162,3 @@ Sets up a directory and runs vibrational calculations. Make sure that script rea
 + `set_delta.sh`\
 If you want to change the delta used in the vibrational calculations, then run this script with the new delta as a parameter before first step. 
 
-
