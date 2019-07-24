@@ -113,6 +113,7 @@ There's a script `plot_intensity.py` which can plot the data that `FCI.py` outpu
 `plot_data(...)` plots the delta peaks and does the gaussian broadening to them. `plot_peak_shift()` calculates and draws the shift in peak intensity caused by vibrations. And here's the results for our benzene example, first `plot_data()`
 ![Energy spectra of benzene](https://raw.githubusercontent.com/aoskarih/Vibrations-with-AIMS/master/benzene_0-4_GW.png)
 And then `plot_peak_shift()`
+![Energy spectra of benzene](https://raw.githubusercontent.com/aoskarih/Vibrations-with-AIMS/master/peak_shift.png)
 
 
 ### Summary
@@ -159,6 +160,9 @@ Runs AIMS and directs output to a file. Make sure that script really finds AIMS.
 
 + `run_vib.sh`\
 Sets up a directory and runs vibrational calculations. Make sure that script really finds AIMS.
+
++ `run_all.sh`\
+Runs the script specified as a parameter in every subdirectory. For example in "*vibrations*" directory you could do `./run_all.sh run_vib.sh` and the script will start all the vibrational calculations.
 
 + `set_delta.sh`\
 If you want to change the delta used in the vibrational calculations, then run this script with the new delta as a parameter before first step. 
