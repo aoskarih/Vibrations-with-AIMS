@@ -109,9 +109,9 @@ The output file is a list of energies and corresponding intensities for differen
 There's a script `plot_intensity.py` which can plot the data that `FCI.py` outputs. It can also calculate the shift from 0-0 peak caused by vibrations. In the bottom of the `plot_intensities.py` there's place where functions can be called to make plots.
 
 `plot_data(...)` plots the delta peaks and does the gaussian broadening to them. `plot_peak_shift()` calculates and draws the shift in peak intensity caused by vibrations. And here's the results for our benzene example, first `plot_data()`
-![Energy spectra of benzene](https://raw.githubusercontent.com/aoskarih/Vibrations-with-AIMS/master/benzene_0-4_GW.png)
+![Energy spectra of benzene](https://raw.githubusercontent.com/aoskarih/Vibrations-with-AIMS/master/example_files/benzene_0-4_GW.png)
 And then `plot_peak_shift()`
-![Energy spectra of benzene](https://raw.githubusercontent.com/aoskarih/Vibrations-with-AIMS/master/peak_shift.png)
+![Energy spectra of benzene](https://raw.githubusercontent.com/aoskarih/Vibrations-with-AIMS/master/example_files/peak_shift.png)
 
 
 ### Summary
