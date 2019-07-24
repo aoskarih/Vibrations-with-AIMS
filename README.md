@@ -1,8 +1,6 @@
 
 # Vibrational spectrum with FHI-AIMS
 
-This is a step-by-step guide to getting vibrational spectrum for your molecule with FHI-AIMS.
-
 ### Steps
 
 1. [Setting up directory](#setting-up-directory)
