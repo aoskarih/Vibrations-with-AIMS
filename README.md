@@ -63,7 +63,7 @@ ion_4/control.in: force_occupation_projector      17 1 1.0 17 17
 ```
 Then run AIMS for all the states. After AIMS has finished there should be `geometry.in.next_step` file in every folder. Those are needed in the next step.
 
-There might be problems when relaxing the geometries. Try running `grep "Maximum force" */aims.out` in "*relaxations*" folder to make sure all the geometries are converged.
+There might be problems when relaxing the geometries. Try running `grep "Maximum force" */aims.out` in "*relaxations*" folder to make sure all the geometries are converged. Trying to relax all the geometries is the most inconsistent step. Especially if there's a lot of states close to each other in energy.
 
 If you have to force occupations in degenerate electron levels, be aware that AIMS usually chooses one of the states and you can't force hole to the other without running a risk that calculation doesn't converge. This means that for example in benzenes case *ion_2* and *ion_3* states will be identical as well as *ion_0* and *ion_1*.
 
@@ -83,7 +83,9 @@ Now that we have all the restart files and proper geometries we can begin the ac
 
 After aims has finished there will be output files in all of the `vibrations/state/delta_0.0025/` directories. What we are interested in are the `run.xyz` and `vib_post_0.0025.out` files. You should check that values in `run.xyz` are in float format. Some times they appear as complex numbers, example: `0.12345+0.00000j`. That can be usually fixed by running the script again: `python get_vibrations.py run 1 >& vib_post_0.0025.out`. 
 
-In addition to normal modes, there's values for force constants, reduced masses and frequencies in `run.xyz`. Sometimes the value for force constant or reduced mass is replaced by \*\*\*\*\*. Post-processing script can handle the situations when only one of the values is missing, but when both of them are missing it causes problems.
+In addition to normal modes, there's values for force constants, reduced masses and frequencies in `run.xyz`. Sometimes the value for force constant or reduced mass is replaced by \*\*\*\*\*. Post-processing script can handle the situations when only one of the values is missing, but when both of them are missing it causes problems. 
+
+It should also be checked that there isn't any unstable frequencies. When calculating the transitions most of the modes are dropped out, so if there's one or two unstable frequensices it shouldn't affect the results that much, but if one of the relevant modes is missing, it could have noticeable effect.
 
 ### Calculating transition intensities
 
