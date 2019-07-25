@@ -63,7 +63,7 @@ ion_4/control.in: force_occupation_projector      17 1 1.0 17 17
 ```
 Then run AIMS for all the states. After AIMS has finished there should be `geometry.in.next_step` file in every folder. Those are needed in the next step.
 
-There might be problems when relaxing the geometries. Try running `grep "Maximum force" */aims.out` in "*relaxations*" folder to make sure all the geometries are converged. Trying to relax all the geometries is the most inconsistent step. Especially if there's a lot of states close to each other in energy.
+There might be problems when relaxing the geometries. Try running `grep "Maximum force" */aims.out` in "*relaxations*" folder to make sure all the geometries are converged. Trying to relax all the geometries is the most inconsistent step, especially if there's a lot of states close to each other in energy. Usually after enough playing around with the last two numbers of `force_occupation_projector` all the geoetries converge.
 
 If you have to force occupations in degenerate electron levels, be aware that AIMS usually chooses one of the states and you can't force hole to the other without running a risk that calculation doesn't converge. This means that for example in benzenes case *ion_2* and *ion_3* states will be identical as well as *ion_0* and *ion_1*.
 
