@@ -23,6 +23,8 @@ m_lim = 2
 n_lim = 3
 S_lim = 1e-4
 
+# Temperature in kelvins
+temperature = 290
 
 delta = 0.0025
 
@@ -430,12 +432,11 @@ def main(filename, tot_energy_file=""):
     f.write("%10s  %10s\n" % ("I","E (eV)"))
     f.close()
     
-    # TODO: change naming to something sensible and define colors in plotting script
     c = range(len(folders))
 
     # writing to file
     for i, d in enumerate(disp):
-        write_intensities(np.dot(T, d), freq[i+1], mu[i+1], [E0[0], E0[i+1]], 290, S_lim, c[i], filename)
+        write_intensities(np.dot(T, d), freq[i+1], mu[i+1], [E0[0], E0[i+1]], temperature, S_lim, c[i], filename)
 
     
     """

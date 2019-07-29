@@ -1,6 +1,7 @@
 # Gitignore
 
 *.swp
+/Anthracene/*
 /Oxygen/*
 /TCNE/*
 /Ozone/*

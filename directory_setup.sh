@@ -2,7 +2,7 @@
 
 # Folder names
 # Root folder
-root=Oxygen
+root=Benzene
 
 # Subfolders
 sub=('relaxations' 'vibrations' 'restart_files')
