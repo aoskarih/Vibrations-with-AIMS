@@ -19,6 +19,7 @@
   #  Occupation settings
   #
 
+#  KS_method                  serial
   restart                       restart
 #  force_occupation_projector      21 1 1.0 20 21 # ion 0
 #  force_occupation_projector      20 1 1.0 20 21 # ion 1

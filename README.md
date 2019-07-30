@@ -19,7 +19,9 @@ Some of the scripts require specific folder structure and folder names, so if yo
 
 Benzene will be used as an example throughout this guide and all the default setting are for benzene. This means that we will have neutral ground state from which all the transitions are going to start and we will take five ion states where transitions are going to end. Ion states are going to differ in their electronic occupations.
 
-The script `directory_setup.sh` will make the folders and copy files automatically, but first you should check that scripts `run_relax.sh` and `run_vib.sh` really run AIMS in your system and that list of states and folder names in `directory_setup.sh` match your needs. Now is also the best time to choose the delta that is used as a displacement in the vibrational calculations. The default is 0.0025 Å and it can be changed with script. For example to set *delta=0.001* `./set_delta.sh 0.001`.
+The script `directory_setup.sh` will make the folders and copy files automatically, but first you should check that scripts `run_relax.sh` and `run_vib.sh` really run AIMS in your system and that list of states and folder names in `directory_setup.sh` match your needs. In the script `run_vib.sh` there are two variables *aims_bin* for the location of AIMS binary and *suffix* for the suffix used when running AIMS. The suffix should be put into quotes e.g. `suffix='mpirun -np 4'`.
+
+Now is also the best time to choose the delta that is used as a displacement in the vibrational calculations. The default is 0.0025 Å and it can be changed with script. For example to set *delta=0.001* `./set_delta.sh 0.001`.
 
 #### Folders
 
@@ -73,11 +75,11 @@ If you have to force occupations in degenerate electron levels, be aware that AI
 
 ### Generating restart files
 
-Because calculations, where occupations are forced, need restart files and for restart file to work `geometry.in` files must be identical, we need 6N restart files per state (N is number of atoms). These files can be created by running "dummy" vibrational calculations with the control file from ground state and the geometry file of the exited state.
+Because calculations, where occupations are forced, need restart files and for restart file to work `geometry.in` files must be identical, we need 6N restart files per state (N is number of atoms). These files can be created by running "dummy" vibrational calculations with the control file of the ground state and the geometry file of the exited state.
 
-To run these calculations, first copy `geometry.in.next_step` files from "*relaxations*" to matching folders in "*restart_files*" and rename them `geometry.in`. Then copy the `control.in` file that was used for the initial state to all of the folders in "*restart_files*". You can also run the script `copy_input.sh` which will copy the files. It should be ran in root directory.
+To run these calculations, first copy `geometry.in.next_step` files from "*relaxations*" to matching folders in "*restart_files*" and rename them `geometry.in`. Then copy the `control.in` file that was used for the initial state to all of the folders in "*restart_files*". You can also run the script `copy_input.sh` which will copy the files. It should be ran in root directory ("*Benzene*" in our example).
 
-Restart files are needed only for the states that force occupations, so for our example we don't need to touch *neutral_0* or *ion_0* states at all. But the other states are ready and next `run_vib.sh` should be ran in those folders. It will make new folder "*delta_0.0025*" and vibrational calculations will be done there. Because `control.in` and `geometry.in` files don't match in these calculations, results will be wrong. But restart files will be generated for all the steps of the calculation and these will be used in the next step.
+Restart files are needed only for the states that force occupations, so for our example we don't need to touch *neutral_0* state at all. But the other states are ready and next `run_vib.sh` should be ran in those folders. It will make new folder "*delta_0.0025*" and vibrational calculations will be done there. Because `control.in` and `geometry.in` files don't match in these calculations, results will be wrong. But restart files will be generated for all the steps of the calculation and these will be used in the next step.
 
 After the script has finished there should be list of folders under "*delta_0.0025*" with names something like "*run.i_atom_1.i_coord_1.displ_0.0025*" and inside everyone of these should be a restart file.
 
@@ -97,9 +99,9 @@ It should also be checked that there isn't any unstable frequencies. When calcul
 
 When the output files of the vibrational calculations are ready, first should be checked that the folder and filenames are correct at the top of the script `FCI.py`. Then the script should be ran in root directory which for our example is "*Benzene*". The script will make a `intensity.dat` file which will have the spectrum we are after. You can change the filename at the bottom of `FCI.py`. When running the script it is recommended to direct the output to a file, for example `python FCI.py >& fci.out`. 
 
-There's few things that can be modified in `FCI.py`. At the top of the file there's variables `S_lim`, `m_lim` and `n_lim`. These control the number of transitions that is calculated. `S_lim` drops out vibrational modes that aren't relevant. `m_lim` is the ceiling for the sum of vibrational quantum numbers of the initial state and `n_lim` is the corresponding value for the final state. There shouln't be any problems with the runtime of the script as long as `m_lim` and `n_lim` are kept reasonably small (defaults: *m=2*, *n=3*). If script seems to take too long to finish even with small *m* and *n* check the output of the script if there's a large number (>10) of relevant modes. If so, then make `S_lim` larger.
+There's few things that can be modified in `FCI.py`. At the top of the file there's variables `S_lim`, `m_lim` and `n_lim`. These control the number of transitions that is calculated. `S_lim` drops out vibrational modes that aren't relevant. `m_lim` is the ceiling for the sum of vibrational quantum numbers of the initial state and `n_lim` is the corresponding value for the final state. There shouln't be any problems with the runtime of the script as long as `m_lim` and `n_lim` are kept reasonably small (defaults: *m=2*, *n=3*). If script seems to take too long to finish even with small *m* and *n* check the output of the script to see if there's a large number (>10) of relevant modes. If so, then make `S_lim` larger.
 
-The script can also be given a file which sets the positions of 0-0 peaks. If no such file is provided the script will read total energies from the relaxation calculations and calculate the positions for the peaks from those values. The file should have the energy of initial state in the first line and then the energies of the final states on their own lines in the same order that they are calculated in the script and nothing else. Example:
+The script can also be given a file which sets the positions of 0-0 peaks. If no such file is provided the script will read total energies from the relaxation calculations and calculate the positions for the peaks from those values. The file should have the energy of initial state in the first line and then the energies of the final states on their own lines in the same order that they are calculated in the script. Example:
 ```
 0.000
 9.055
@@ -108,7 +110,7 @@ The script can also be given a file which sets the positions of 0-0 peaks. If no
 12.318
 12.458
 ```
-Now the first value is zero, but only thing that matters is the differences in the values.
+Now the first value is zero, but only thing that matters is the differences in the values. There can be more values in the file than what is needed as long as the needed values are first. In general it is best to use file for the 0-0 positions since the values from relaxations aren't that good and the script fails if any of the relaxations has failed.
 
 The output file is a list of energies and corresponding intensities for different transitions. There's also identifier which tells the final state associated with the transition.
 
@@ -166,9 +168,6 @@ Runs AIMS and directs output to a file. Make sure that script really finds AIMS.
 
 + `run_vib.sh`\
 Sets up a directory and runs vibrational calculations. Make sure that script really finds AIMS.
-
-+ `run_all.sh`\
-Runs the script specified as a parameter in every subdirectory. For example in "*vibrations*" directory you could do `./run_all.sh run_vib.sh` and the script will start all the vibrational calculations.
 
 + `set_delta.sh`\
 If you want to change the delta used in the vibrational calculations, then run this script with the new delta as a parameter before first step. 

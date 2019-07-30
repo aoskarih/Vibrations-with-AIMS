@@ -1,9 +1,9 @@
 #!/bin/bash
 #SBATCH -J AIMS_vib
 #SBATCH --partition=serial
-#SBATCH --time=01:59:59
+#SBATCH --time=05:59:59
 ##SBATCH -N 1
-#SBATCH -n 16
+#SBATCH -n 8
 #SBATCH --mem-per-cpu=1900
 #SBATCH --cpus-per-task=1
 #SBATCH -o AIMS_output
@@ -18,8 +18,15 @@ export OMP_STACKSIZE="1G"
 #
 #
 
-aims_dir=/homeappl/home/hyvonen1/fhi-aims.160328_3/bin/aims.160328_3.mpi.x
+# suffix when running aims e.g. 'mpirun -np 4'
+suffix=srun
+
+# aims binary
+aims_bin=/homeappl/home/hyvonen1/fhi-aims.160328_3/bin/aims.160328_3.mpi.x
+
+# modules that must be loaded
 module load python-env
+
 
 
 delta=0.0025
@@ -31,5 +38,5 @@ cd delta_$delta
 
 # -s suffix when running aims
 # -r path to aims binary
-python get_vibrations.py -s srun -r $aims_dir run 0 >& vib_$delta.out
+python get_vibrations.py -s $suffix -r $aims_bin run 0 >& vib_$delta.out
 python get_vibrations.py run 1 >& vib_post_$delta.out
