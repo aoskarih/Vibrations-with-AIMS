@@ -224,7 +224,110 @@ def plot_zz(fig):
     ax.legend()
 
 # Same as plotting() but places of 0-0 peaks are shifted accordin to shift_file.
+def plot_data_shift(filename, shift_file, fig, title):
+    peaks_only = 1
+
+    ax = fig.add_subplot(211)
+    ax12 = fig.add_subplot(212, sharex=ax)
+    fig.subplots_adjust(hspace=0.1)
+    dat_I = []
+    dat_E = []
+    col = []
+    print("Reading file")
+    f = open(filename, "r")
+    f.next()
+
+    zz_peaks = []   # (I, E)
+    dic = {}
+    ind = 0
+
+    for l in f:
+        p = l.split()
+        dat_I.append(float(p[0]))
+        dat_E.append(abs(float(p[1])))
+        c = int(p[2])
+        if c not in col:
+            zz_peaks.append((float(p[0]), abs(float(p[1]))))
+            dic[c] = ind
+            ind += 1
+        col.append(c)
+    f.close()
+
+    dci = []
+
+    f = open(shift_file, "r")
+    for l in f:
+        dci.append(float(l))
+    f.close()
+
+    for i in range(len(dat_E)):
+        dat_E[i] -= zz_peaks[dic[col[i]]][1]
+        dat_E[i] += dci[dic[col[i]]+1]
+
+    print("Reading done")
+    n = len(dic)
+
+    inv_dic = {v: k for k, v in dic.iteritems()}
+
+    y = [np.zeros(len(x)) for _ in range(n)]
+    y0 = [np.zeros(len(x)) for _ in range(n)]
+
+    print("Starting gaussian broadening")
+    for j, (i, e, c) in enumerate(zip(dat_I, dat_E, col)):
+        if j % 10 == 0:
+            print(j)
+        for j, v in enumerate(x):
+            y[dic[c]][j] += i*gaussian(v, e, sig)
+    """
+    for i in range(n):
+        for j, v in enumerate(x):
+            y0[i][j] += zz_peaks[i][0]*gaussian(v, zz_peaks[i][1], sig)
+    """
+    print("Gaussian broadening ready")
+
+    max_all = [np.argmax(y[i]) for i in range(n)]
+    max_0 = [np.argmax(y0[i]) for i in range(n)]
+
+    print("Plotting")
+    """
+    for i in range(n):
+        ax.plot([mi+max_0[i]*dx, mi+max_0[i]*dx], [0, y0[i][max_0[i]]], "--", color=inv_dic[i])
+        ax.plot([mi+max_all[i]*dx, mi+max_all[i]*dx], [0, y[i][max_all[i]]], "--", color=inv_dic[i], label="Peak diff. %i: %4.3f eV" % (i, abs(x[max_0[i]]-x[max_all[i]])))
+    """
+    for i in range(len(dat_I)):
+        if peaks_only:
+            ax12.plot([dat_E[i], dat_E[i]], [0, dat_I[i]], color=cl[col[i]], lw=2.0)
+        ax.plot([dat_E[i], dat_E[i]], [0, dat_I[i]], color=cl[col[i]], lw=2.0)
+
+    for i, c in enumerate(set(col)):
+        ax.plot(x, y[dic[c]], "-", color=cl[c], label="")
+        #ax.plot(x, y0[dic[c]], "-.", lw=1.5, color=cl[c])
+
+    y_all = np.zeros(len(x))
+    for i, v in enumerate(x):
+        y_all[i] = sum([y[j][i] for j in range(n)])
+
+    ax.plot(x, y_all, "-", color="black")
+    
+    tot_gauss.append(y_all)
+
+    ax.set_xlim(mi, ma)
+    #ax.set_ylim(0, 3)
+    ax.set_title(title)
+    #ax.set_xlabel("Energy (eV)")
+    ax.set_ylabel("Relative intensity")
+    
+    ax12.set_xlim(mi, ma)
+    #ax12.set_ylim(0, 0.5)
+    ax12.set_xlabel("Energy (eV)")
+    ax12.set_ylabel("Relative intensity")
+    
+    ax.legend()
+
+
+
 def plot_shift_vib(filename, shift_file, ax, title):
+
     dat_I = []
     dat_E = []
     col = []
@@ -398,10 +501,12 @@ def plot_peak_shift(filename, states, fig):
 if __name__ == "__main__":
    
     # Plots peaks from a file to figure
-    plot_data("intensity.dat", fig1, "Neutral -> Ion - DCI:0-0, PBE:vib")
-    
+    plot_data("intensity.dat", fig1, "")
+   
+    # Plots states on their own and calculates the shift from 0-0 transition.
     plot_peak_shift("intensity.dat", [0, 1, 2], fig3)
 
+   
     # Saving figure
     #fig1.savefig("results/neutral-ion_dci.png")
     
