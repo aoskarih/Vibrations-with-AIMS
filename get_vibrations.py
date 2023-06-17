@@ -130,7 +130,7 @@ class structure:
       line=''
       if self.periodic:
 	for i in range(3):
-	  line=line+'lattic_vector{0:14.8f}'.format(self.lattic_vector[i,0])
+	  line=line+'lattice_vector{0:14.8f}'.format(self.lattic_vector[i,0])
 	  line=line+'{0:14.8f}'.format(self.lattic_vector[i,1])
 	  line=line+'{0:14.8f}\n'.format(self.lattic_vector[i,2])
 	line=line+'set_vacuum_level{0:14.8f}\n'.format(self.vacuum_level)
